@@ -1,5 +1,7 @@
 import * as THREE from "three"
 import { BaseMeshCreator } from "../../src/core/systems/render"
+import * as planetVertexShader from "../shaders/planet.vert"
+import * as planetFragmentShader from "../shaders/planet.frag"
 
 export class PlanetMeshCreator extends BaseMeshCreator {
     BASE_GEOMETRIES = {
@@ -93,5 +95,22 @@ export class PlanetMeshCreator extends BaseMeshCreator {
         mesh.add(predictor)
 
         return mesh
+    }
+
+    create_planet() {
+        const u = {
+            time: { type: "f", value: 1.0 },
+            resolution: { type: "v2", value: new THREE.Vector2() }
+        }
+        const planetSurface = new THREE.Mesh(
+            new THREE.SphereGeometry(0.5, 32, 32), 
+            new THREE.ShaderMaterial({
+                uniforms: u, vertexShader: planetVertexShader, fragmentShader: planetFragmentShader
+            })
+        )
+
+        const group = new THREE.Group();
+
+        return group
     }
 }

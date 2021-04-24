@@ -10,7 +10,8 @@ export class ExplosionSystem extends System {
                 geometry: "sphere", 
                 material: "explosion",
                 scale: 0.1 ,
-                shadow: false
+                cast_shadow: false,
+                receive_shadow: false,
             } )
             explosion.start = time
         })
