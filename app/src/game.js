@@ -20,6 +20,7 @@ import { ThrustersSystem } from "./systems/thrusters"
 import { PredictorComponent } from "./components/path_predict"
 import { PathPredictorSystem } from "./systems/path_predict"
 import { StaticDrawUsage } from "three"
+import { PlanetRenderSystem } from "./systems/planet_render"
 
 class HitComponent extends TagComponent {}
 
@@ -62,7 +63,7 @@ export function game_init(options){
     world.registerSystem(ThrustersSystem)
     world.registerSystem(PathPredictorSystem)
     world.registerSystem(Physics2dMeshUpdateSystem)
-    world.registerSystem(RenderSystem,{
+    world.registerSystem(PlanetRenderSystem,{
         render_element_id:options.render_element,
         mesh_creator: new PlanetMeshCreator(),
     })

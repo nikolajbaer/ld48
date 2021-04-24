@@ -119,7 +119,6 @@ export class RenderSystem extends System {
             }else{
                 this.scene.remove(obj)
             }
-            obj.dispose()
             e.removeComponent(Obj3dComponent)
         })
 
