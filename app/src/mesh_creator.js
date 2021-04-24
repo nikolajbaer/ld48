@@ -18,12 +18,61 @@ export class PlanetMeshCreator extends BaseMeshCreator {
     }
 
     create_mesh(geometry,material,receiveShadow,castShadow){
-        const m =new THREE.Mesh(
-            this.BASE_GEOMETRIES[geometry],
-            this.BASE_MATERIALS[material]?this.BASE_MATERIALS[material]:new THREE.MeshLambertMaterial({ color: material })
-        )
-        m.receiveShadow = receiveShadow
-        m.castShadow = castShadow
-        return m
+        if(geometry == "sputnik"){
+            return this.create_sputnik()
+        }else{
+            const m =new THREE.Mesh(
+                this.BASE_GEOMETRIES[geometry],
+                this.BASE_MATERIALS[material]?this.BASE_MATERIALS[material]:new THREE.MeshLambertMaterial({ color: material })
+            )
+            m.receiveShadow = receiveShadow
+            m.castShadow = castShadow
+            return m
+
+        }
+    }
+
+    create_sputnik(){
+        const geom = new THREE.BoxGeometry()
+        const mat = new THREE.MeshLambertMaterial({ color: 0xff0000 })
+        const mesh = new THREE.Mesh(geom,mat)
+        mesh.receiveShadow = true
+        mesh.castShadow = true
+
+        // Create Thrust indicators
+        const tgeom = new THREE.ConeGeometry(0.5,2,3,2,false)
+        const tmat = new THREE.MeshBasicMaterial({ color: 0xffaa00 })
+
+        const t_offset = 2
+        const t_up = new THREE.Mesh(tgeom,tmat)
+        t_up.position.y = -t_offset
+        t_up.rotation.z = Math.PI
+        t_up.visible = false 
+        mesh.add(t_up)
+
+        const t_down = new THREE.Mesh(tgeom,tmat)
+        t_down.position.y = t_offset 
+        t_down.visible = false
+        mesh.add(t_down)
+
+        const t_left = new THREE.Mesh(tgeom,tmat)
+        t_left.rotation.z = -Math.PI/2
+        t_left.position.x = t_offset 
+        t_left.visible = false
+        mesh.add(t_left)
+
+        const t_right = new THREE.Mesh(tgeom,tmat)
+        t_right.rotation.z = Math.PI/2
+        t_right.position.x = -t_offset
+        t_right.visible = false
+        mesh.add(t_right)
+
+        // Create Prediction child mesh
+        const pgeom = new THREE.BufferGeometry()
+        const pmat = new THREE.LineBasicMaterial({ color: 0x0033bb, transparent: true, opacity: 0.5 })
+        const predictor = new THREE.Line(pgeom,pmat)
+        mesh.add(predictor)
+
+        return mesh
     }
 }

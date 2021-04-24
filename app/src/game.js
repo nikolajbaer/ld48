@@ -17,6 +17,8 @@ import { GravityComponent, PlanetaryComponent } from "./components/gravity"
 import { GravitySystem } from "./systems/gravity"
 import { ThrusterComponent } from "./components/thrusters"
 import { ThrustersSystem } from "./systems/thrusters"
+import { PredictorComponent } from "./components/path_predict"
+import { PathPredictorSystem } from "./systems/path_predict"
 
 class HitComponent extends TagComponent {}
 
@@ -45,6 +47,7 @@ export function game_init(options){
     world.registerComponent(OrbitComponent)
     world.registerComponent(PlanetaryComponent)
     world.registerComponent(ThrusterComponent)
+    world.registerComponent(PredictorComponent)
 
     // register our systems
     if(options.touch){
@@ -56,6 +59,7 @@ export function game_init(options){
     world.registerSystem(OrbitSystem)
     world.registerSystem(GravitySystem)
     world.registerSystem(ThrustersSystem)
+    world.registerSystem(PathPredictorSystem)
     world.registerSystem(Physics2dMeshUpdateSystem)
     world.registerSystem(RenderSystem,{
         render_element_id:options.render_element,
@@ -82,7 +86,7 @@ export function game_init(options){
     sun_light.addComponent(LocRotComponent,{location: new Vector3(0,0,0)})
     sun_light.addComponent(LightComponent,{type:"point",cast_shadow:true,intensity:0.9,decay:1000,color: 0xFFFFaa })
     
-    const PLANET_DENSITY = 1
+    const PLANET_DENSITY = 1000
     const planet_mass = r => PLANET_DENSITY * 4/3 * Math.PI * Math.pow(r,3)
 
     // add a sun 
@@ -110,7 +114,7 @@ export function game_init(options){
             avel: Math.random()*0.05 + 0.05,
             aoffset: Math.random() * Math.PI * 2,
         })
-        p.addComponent(PlanetaryComponent,{mass:planet_mass(r)})
+        p.addComponent(PlanetaryComponent,{mass:planet_mass(s)})
         p.name = "Planet "+ (i+1)
 
         const ring = world.createEntity()
@@ -123,7 +127,7 @@ export function game_init(options){
     }
  
     const b = world.createEntity()    
-    b.addComponent(ModelComponent,{geometry:"box",scale:new Vector3(0.2,0.2,0.2),material:"red"})
+    b.addComponent(ModelComponent,{geometry:"sputnik",scale:new Vector3(0.2,0.2,0.2),material:"red"})
     b.addComponent(LocRotComponent,{location:new Vector3(50,0,0)})
     b.addComponent(Body2dComponent,{
         body_type:"dynamic",
@@ -135,6 +139,7 @@ export function game_init(options){
     b.addComponent(GravityComponent) 
     b.addComponent(ThrusterComponent,{thrust:4})
     b.addComponent(ActionListenerComponent)
+    b.addComponent(PredictorComponent,{ticks:240})
 
     start_game(world)
 

@@ -8,27 +8,39 @@ export class GravitySystem extends System {
         this.G = attributes && attributes.G?attributes.G:0.001
     }
 
+    planet_positions(){
+        return this.queries.planets.results.map( p => { 
+            const planet = {
+                pos:p.getComponent(Physics2dComponent).body.getPosition().clone(),
+                mass:p.getComponent(PlanetaryComponent).mass,
+            }
+            return planet
+        })
+    }
+
     execute(delta,time){
         this.queries.bodies.results.forEach( e => {
             const body = e.getComponent(Physics2dComponent).body
             const pos = body.getPosition()
             const m = body.getMass()
-
-            const g = new planck.Vec2(0,0)
-            this.queries.planets.results.forEach( e => {
-                const pbody = e.getComponent(Physics2dComponent).body
-                const planet = e.getComponent(PlanetaryComponent)
-                const ppos = pbody.getPosition()
-                const gv = ppos.clone()
-                gv.sub(pos)
-                const gf = this.G * ((planet.mass * m)/Math.pow(gv.length(),2))
-                gv.normalize()
-                gv.mul(gf)
-                g.add(gv) // add gravitational force from this body
-            })
+            const g = this.cumulative_gravity(pos,m,this.planet_positions())
             body.applyForce(g,pos)
         })
     }
+
+    cumulative_gravity(pos,mass,planets){
+        const g = new planck.Vec2(0,0)
+        planets.forEach( p => {
+            const gv = p.pos.clone()
+            gv.sub(pos)
+            const gf = this.G * ((p.mass * mass)/Math.pow(gv.length(),2))
+            gv.normalize()
+            gv.mul(gf)
+            g.add(gv) // add gravitational force from this body
+        })
+        return g
+    }
+
 }
 
 GravitySystem.queries = {
