@@ -20,6 +20,7 @@ import { ThrustersSystem } from "./systems/thrusters"
 import { PredictorComponent } from "./components/path_predict"
 import { PathPredictorSystem } from "./systems/path_predict"
 import { StaticDrawUsage } from "three"
+import { PlanetRenderSystem } from "./systems/planet_render"
 import { PlanetCollisionSystem } from "./systems/planet_collision"
 import { ExplosionComponent } from "./components/explosion"
 import { ExplosionSystem } from "./systems/explosion"
@@ -72,7 +73,7 @@ export function game_init(options){
     world.registerSystem(PlanetCollisionSystem)
     world.registerSystem(ExplosionSystem)
     world.registerSystem(Physics2dMeshUpdateSystem)
-    world.registerSystem(RenderSystem,{
+    world.registerSystem(PlanetRenderSystem,{
         render_element_id:options.render_element,
         mesh_creator: new PlanetMeshCreator(),
     })

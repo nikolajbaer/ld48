@@ -17,6 +17,13 @@ module.exports = {
             ]
         },
         {
+          test: /\.(glsl|vert|frag)$/,
+          use: [{
+            loader: 'webpack-glsl-loader',
+            options: { outputPath: 'static'}
+          }]
+        },
+        {
             test: /\.(png|svg|jpg|jpeg|gif|pdf|fbx|glb)$/,
             use: [{
                 loader: 'file-loader',
