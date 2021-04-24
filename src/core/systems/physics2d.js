@@ -21,10 +21,10 @@ export class Physics2dSystem extends System {
             position: new pl.Vec2(locrot.location.x,locrot.location.y),
             type: body.body_type,
             userData: { ecsy_entity: e },
-            linearVelocity: new pl.Vec2(body.velocity.x,body.velocity.y)
+            linearVelocity: new pl.Vec2(body.velocity.x,body.velocity.y),
+            mass: body.mass,
         }
         let body1 = this.physics_world.createBody(bdef)
-   
         switch(body.bounds_type){
             case "box":
                 body1.createFixture({

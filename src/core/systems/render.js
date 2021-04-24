@@ -53,13 +53,13 @@ export class RenderSystem extends System {
         const light = e.getComponent(LightComponent)
         switch(light.type){
             case "ambient":
-                const ambient = new THREE.AmbientLight( 0xeeeeee );
+                const ambient = new THREE.AmbientLight( light.color );
                 this.scene.add( ambient );
                 e.addComponent(Obj3dComponent,{obj:ambient})
                 console.log("Creating ambient light")
                 break
             case "point":
-                const point = new THREE.PointLight( 0xffffff, 0.5, 100 );
+                const point = new THREE.PointLight( light.color, light.intensity, light.decay );
                 if( e.hasComponent(LocRotComponent)){
                     const location = e.getComponent(LocRotComponent).location
                     point.position.set( location.x,location.y, location.z );

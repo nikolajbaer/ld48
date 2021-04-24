@@ -5,7 +5,7 @@ import { Vector2Type,Vector2 } from '../ecs_types'
 
 export class Body2dComponent extends Component {}
 Body2dComponent.schema = {
-  density: { type: Types.Number, default: 1  },
+  mass: { type: Types.Number, default: 1  },
   bounds_type: { type: Types.String, default:"circle" },
   width: { type: Types.Number, default: 1 },
   height: { type: Types.Number, default: 1 },

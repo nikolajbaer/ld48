@@ -37,4 +37,7 @@ export class LightComponent extends Component {}
 LightComponent.schema = {
     type: { type: Types.String, default: "point" },
     cast_shadow: { type: Types.Boolean, default: true },
+    intensity: { type: Types.Number, default: 0.5 },
+    color: { type: Types.Number, default: 0xffffff },
+    decay: { type: Types.Number, default: 100 },
 }

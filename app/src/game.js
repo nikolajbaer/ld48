@@ -15,6 +15,8 @@ import { OrbitSystem } from "./systems/orbit"
 import { PlanetMeshCreator } from "./mesh_creator"
 import { GravityComponent, PlanetaryComponent } from "./components/gravity"
 import { GravitySystem } from "./systems/gravity"
+import { ThrusterComponent } from "./components/thrusters"
+import { ThrustersSystem } from "./systems/thrusters"
 
 class HitComponent extends TagComponent {}
 
@@ -42,6 +44,7 @@ export function game_init(options){
     world.registerComponent(GravityComponent)
     world.registerComponent(OrbitComponent)
     world.registerComponent(PlanetaryComponent)
+    world.registerComponent(ThrusterComponent)
 
     // register our systems
     if(options.touch){
@@ -52,6 +55,7 @@ export function game_init(options){
     world.registerSystem(HUDSystem)
     world.registerSystem(OrbitSystem)
     world.registerSystem(GravitySystem)
+    world.registerSystem(ThrustersSystem)
     world.registerSystem(Physics2dMeshUpdateSystem)
     world.registerSystem(RenderSystem,{
         render_element_id:options.render_element,
@@ -68,37 +72,47 @@ export function game_init(options){
         current: true,
         upVec: new Vector3(0,0,1),
     })
-    c.addComponent(LocRotComponent,{location: new Vector3(20,-20,20)})
+    c.addComponent(LocRotComponent,{location: new Vector3(0,-20,20)})
 
     const l1 = world.createEntity()
     l1.addComponent(LocRotComponent,{location: new Vector3(0,0,0)})
-    l1.addComponent(LightComponent,{type:"ambient"})
+    l1.addComponent(LightComponent,{type:"ambient",color: 0x555555})
 
-    const l2 = world.createEntity()
-    l2.addComponent(LocRotComponent,{location: new Vector3(10,30,0)})
-    l2.addComponent(LightComponent,{type:"point",cast_shadow:true})
+    const sun_light = world.createEntity()
+    sun_light.addComponent(LocRotComponent,{location: new Vector3(0,0,0)})
+    sun_light.addComponent(LightComponent,{type:"point",cast_shadow:true,intensity:0.9,decay:1000,color: 0xFFFFaa })
+    
+    const PLANET_DENSITY = 1
+    const planet_mass = r => PLANET_DENSITY * 4/3 * Math.PI * Math.pow(r,3)
 
     // add a sun 
     const sun  = world.createEntity()
-    sun.addComponent(ModelComponent,{geometry:"sphere",material:"yellow",scale:new Vector3(3,3,3)})
+    sun.addComponent(ModelComponent,{geometry:"sphere",material:"sun",scale:new Vector3(3,3,3)})
     sun.addComponent(LocRotComponent,{location: new Vector3(0,0,0)})
-    sun.addComponent(Body2dComponent,{body_type: "static"})
+    sun.addComponent(Body2dComponent,{body_type: "static",width:3,height:3})
+    sun.addComponent(PlanetaryComponent,{mass:planet_mass(3)})
+    sun.name = "sun"
 
     const n = 10 // num planets
-
     for(var i=0; i<n; i++){
         const p = world.createEntity()
         const r = 5 + i * 1.5 
         const s = Math.random()*1 + 0.5
         p.addComponent(ModelComponent,{geometry:"sphere",scale:new Vector3(s,s,s)})
         p.addComponent(LocRotComponent,{location: new Vector3(r,0,0)})
-        p.addComponent(Body2dComponent,{body_type: "kinematic",width:s/2,height:s/2})
+        p.addComponent(Body2dComponent,{
+            body_type: "kinematic",
+            width:s,
+            height:s,
+        })
         p.addComponent(OrbitComponent,{
             radius: r, 
             avel: Math.random()*0.05 + 0.05,
             aoffset: Math.random() * Math.PI * 2,
         })
-        p.addComponent(PlanetaryComponent)
+        p.addComponent(PlanetaryComponent,{mass:planet_mass(r)})
+        p.name = "Planet "+ (i+1)
+
         const ring = world.createEntity()
         ring.addComponent(ModelComponent,{
             geometry:"orbit",
@@ -115,9 +129,12 @@ export function game_init(options){
         body_type:"dynamic",
         width:0.2/2,
         height:0.2/2,
-        velocity: new Vector2(-5,0),
+        velocity: new Vector2(-5,1),
+        mass:1,
     })
     b.addComponent(GravityComponent) 
+    b.addComponent(ThrusterComponent,{thrust:4})
+    b.addComponent(ActionListenerComponent)
 
     start_game(world)
 
