@@ -23,6 +23,7 @@ import { StaticDrawUsage } from "three"
 import { PlanetCollisionSystem } from "./systems/planet_collision"
 import { ExplosionComponent } from "./components/explosion"
 import { ExplosionSystem } from "./systems/explosion"
+import { GameHudState } from "./hud_state"
 
 class HitComponent extends TagComponent {}
 
@@ -61,7 +62,9 @@ export function game_init(options){
     }else{
         world.registerSystem(ControlsSystem,{listen_element_id:options.render_element})
     }
-    world.registerSystem(HUDSystem)
+
+    const game_hud_state = new GameHudState()
+    world.registerSystem(HUDSystem,{hud_state: game_hud_state })
     world.registerSystem(OrbitSystem)
     world.registerSystem(GravitySystem)
     world.registerSystem(ThrustersSystem)
