@@ -1,7 +1,7 @@
 import { World } from "ecsy"
 import { CameraComponent, Obj3dComponent, ModelComponent, LightComponent } from "../../src/core/components/render"
 import { LocRotComponent } from "../../src/core/components/position"
-import { Body2dComponent, Physics2dComponent  } from "../../src/core/components/physics2d"
+import { Body2dComponent, Collision2dComponent, Physics2dComponent  } from "../../src/core/components/physics2d"
 import { HUDDataComponent } from "../../src/core/components/hud"
 import { RenderSystem } from "../../src/core/systems/render"
 import { Physics2dMeshUpdateSystem, Physics2dSystem } from "../../src/core/systems/physics2d"
@@ -21,6 +21,9 @@ import { PredictorComponent } from "./components/path_predict"
 import { PathPredictorSystem } from "./systems/path_predict"
 import { StaticDrawUsage } from "three"
 import { PlanetRenderSystem } from "./systems/planet_render"
+import { PlanetCollisionSystem } from "./systems/planet_collision"
+import { ExplosionComponent } from "./components/explosion"
+import { ExplosionSystem } from "./systems/explosion"
 
 class HitComponent extends TagComponent {}
 
@@ -50,6 +53,8 @@ export function game_init(options){
     world.registerComponent(PlanetaryComponent)
     world.registerComponent(ThrusterComponent)
     world.registerComponent(PredictorComponent)
+    world.registerComponent(Collision2dComponent)
+    world.registerComponent(ExplosionComponent)
 
     // register our systems
     if(options.touch){
@@ -62,6 +67,8 @@ export function game_init(options){
     world.registerSystem(GravitySystem)
     world.registerSystem(ThrustersSystem)
     world.registerSystem(PathPredictorSystem)
+    world.registerSystem(PlanetCollisionSystem)
+    world.registerSystem(ExplosionSystem)
     world.registerSystem(Physics2dMeshUpdateSystem)
     world.registerSystem(PlanetRenderSystem,{
         render_element_id:options.render_element,
@@ -97,7 +104,7 @@ export function game_init(options){
 
     // add a sun 
     const sun  = world.createEntity()
-    sun.addComponent(ModelComponent,{geometry:"sphere",material:"sun",scale:new Vector3(3,3,3)})
+    sun.addComponent(ModelComponent,{geometry:"sphere",material:"sun",scale:new Vector3(3,3,3),receive_shadow:false})
     sun.addComponent(LocRotComponent,{location: new Vector3(0,0,0)})
     sun.addComponent(Body2dComponent,{body_type: "static",width:3,height:3})
     sun.addComponent(PlanetaryComponent,{mass:planet_mass(3)})
@@ -128,6 +135,8 @@ export function game_init(options){
             geometry:"orbit",
             scale:new Vector3(r,r,r),
             material:"trail",
+            cast_shadow: false,
+            receive_shadow: false,
         })
         ring.addComponent(LocRotComponent)
     }
@@ -141,11 +150,13 @@ export function game_init(options){
         height:0.2/2,
         velocity: new Vector2(-5,1),
         mass:1,
+        track_collisions: true,
     })
     b.addComponent(GravityComponent) 
     b.addComponent(ThrusterComponent,{thrust:4})
     b.addComponent(ActionListenerComponent)
     b.addComponent(PredictorComponent,{ticks:240})
+    b.name = "sputnik"
 
     start_game(world)
 

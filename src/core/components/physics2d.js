@@ -21,3 +21,10 @@ Physics2dComponent.schema = {
   body: { type: Types.Ref }
 }
 
+export class Collision2dComponent extends Component {}
+Collision2dComponent.schema = {
+  entity: { type: Types.Ref },
+  normal_impulse: { type: Types.Number },
+  tan_impulse: { type: Types.Number },
+}
+
