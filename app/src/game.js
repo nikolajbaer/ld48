@@ -1,0 +1,130 @@
+import { World } from "ecsy"
+import { CameraComponent, Obj3dComponent, ModelComponent, LightComponent } from "../../src/core/components/render"
+import { LocRotComponent } from "../../src/core/components/position"
+import { Body2dComponent, Physics2dComponent  } from "../../src/core/components/physics2d"
+import { HUDDataComponent } from "../../src/core/components/hud"
+import { RenderSystem } from "../../src/core/systems/render"
+import { Physics2dMeshUpdateSystem, Physics2dSystem } from "../../src/core/systems/physics2d"
+import { HUDSystem } from "../../src/core/systems/hud"
+import { Vector3, Vector2 } from "../../src/core/ecs_types"
+import { ControlsSystem } from "../../src/core/systems/controls"
+import { ActionListenerComponent } from "../../src/core/components/controls"
+import { TagComponent } from "ecsy"
+import { OrbitComponent } from "./components/orbit"
+import { OrbitSystem } from "./systems/orbit"
+import { PlanetMeshCreator } from "./mesh_creator"
+
+class HitComponent extends TagComponent {}
+
+
+export function load_assets(){
+    return new Promise((resolve,reject) => {
+        resolve()
+    })
+}
+
+export function game_init(options){
+    console.log("initializing game")
+    const world = new World()
+
+    // register components we are using
+    world.registerComponent(Obj3dComponent)
+    world.registerComponent(ModelComponent)
+    world.registerComponent(Body2dComponent)
+    world.registerComponent(Physics2dComponent)
+    world.registerComponent(LocRotComponent)
+    world.registerComponent(HUDDataComponent)
+    world.registerComponent(ActionListenerComponent)
+    world.registerComponent(CameraComponent)
+    world.registerComponent(LightComponent)
+    world.registerComponent(OrbitComponent)
+
+    // register our systems
+    if(options.touch){
+        // todo init touch controls
+    }else{
+        world.registerSystem(ControlsSystem,{listen_element_id:options.render_element})
+    }
+    world.registerSystem(HUDSystem)
+    world.registerSystem(OrbitSystem)
+    world.registerSystem(Physics2dMeshUpdateSystem)
+    world.registerSystem(RenderSystem,{
+        render_element_id:options.render_element,
+        mesh_creator: new PlanetMeshCreator(),
+    })
+
+    // Physics we have to tie in any custom collision handlers, where 
+    // entity_a has a PhysicsComponent with track_collisions enabled 
+    world.registerSystem(Physics2dSystem)
+
+    const c = world.createEntity()
+    c.addComponent(CameraComponent,{
+        lookAt: new Vector3(0,0,0),
+        current: true,
+        upVec: new Vector3(0,0,1),
+    })
+    c.addComponent(LocRotComponent,{location: new Vector3(20,-20,20)})
+
+    const l1 = world.createEntity()
+    l1.addComponent(LocRotComponent,{location: new Vector3(0,0,0)})
+    l1.addComponent(LightComponent,{type:"ambient"})
+
+    const l2 = world.createEntity()
+    l2.addComponent(LocRotComponent,{location: new Vector3(10,30,0)})
+    l2.addComponent(LightComponent,{type:"point",cast_shadow:true})
+
+    // add a sun 
+    const sun  = world.createEntity()
+    sun.addComponent(ModelComponent,{geometry:"sphere",material:"yellow",scale:new Vector3(3,3,3)})
+    sun.addComponent(LocRotComponent,{location: new Vector3(0,0,0)})
+    sun.addComponent(Body2dComponent,{body_type: "static"})
+
+    const n = 10 // num planets
+
+    for(var i=0; i<n; i++){
+        const p = world.createEntity()
+        const r = 5 + i * 1.5 
+        const s = Math.random()*1 + 0.5
+        p.addComponent(ModelComponent,{geometry:"sphere",scale:new Vector3(s,s,s)})
+        p.addComponent(LocRotComponent,{location: new Vector3(r,0,0)})
+        p.addComponent(Body2dComponent,{body_type: "kinematic",width:s/2,height:s/2})
+        p.addComponent(OrbitComponent,{
+            radius: r, 
+            avel: Math.random()*0.05 + 0.05,
+            aoffset: Math.random() * Math.PI * 2,
+        })
+        const ring = world.createEntity()
+        ring.addComponent(ModelComponent,{
+            geometry:"orbit",
+            scale:new Vector3(r,r,r),
+            material:"trail",
+        })
+        ring.addComponent(LocRotComponent)
+    }
+  
+    start_game(world)
+
+    return world
+}
+
+function start_game(world){
+    let lastTime = performance.now() / 1000
+
+    let paused = false
+
+    window.addEventListener("keypress", (e) => {
+        if(e.key == " "){
+            paused = !paused
+        }
+    })
+
+    function animate() {
+        requestAnimationFrame( animate );            
+        if(paused){ return }
+
+        let time = performance.now() / 1000
+        let delta = time - lastTime
+        world.execute(delta,time) 
+    }
+    animate();
+}
