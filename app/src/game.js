@@ -1,7 +1,7 @@
 import { World } from "ecsy"
 import { CameraComponent, Obj3dComponent, ModelComponent, LightComponent } from "../../src/core/components/render"
 import { LocRotComponent } from "../../src/core/components/position"
-import { Body2dComponent, Physics2dComponent  } from "../../src/core/components/physics2d"
+import { Body2dComponent, Collision2dComponent, Physics2dComponent  } from "../../src/core/components/physics2d"
 import { HUDDataComponent } from "../../src/core/components/hud"
 import { RenderSystem } from "../../src/core/systems/render"
 import { Physics2dMeshUpdateSystem, Physics2dSystem } from "../../src/core/systems/physics2d"
@@ -49,6 +49,7 @@ export function game_init(options){
     world.registerComponent(PlanetaryComponent)
     world.registerComponent(ThrusterComponent)
     world.registerComponent(PredictorComponent)
+    world.registerComponent(Collision2dComponent)
 
     // register our systems
     if(options.touch){
@@ -140,11 +141,13 @@ export function game_init(options){
         height:0.2/2,
         velocity: new Vector2(-5,1),
         mass:1,
+        track_collisions: true,
     })
     b.addComponent(GravityComponent) 
     b.addComponent(ThrusterComponent,{thrust:4})
     b.addComponent(ActionListenerComponent)
     b.addComponent(PredictorComponent,{ticks:240})
+    b.name = "sputnik"
 
     start_game(world)
 
