@@ -18,9 +18,10 @@ export class Physics2dSystem extends System {
         const locrot = e.getComponent(LocRotComponent)
 
         const bdef = {
-            position:pl.Vec2(locrot.location.x,locrot.location.y),
+            position: new pl.Vec2(locrot.location.x,locrot.location.y),
             type: body.body_type,
             userData: { ecsy_entity: e },
+            linearVelocity: new pl.Vec2(body.velocity.x,body.velocity.y)
         }
         let body1 = this.physics_world.createBody(bdef)
    

@@ -13,6 +13,8 @@ import { TagComponent } from "ecsy"
 import { OrbitComponent } from "./components/orbit"
 import { OrbitSystem } from "./systems/orbit"
 import { PlanetMeshCreator } from "./mesh_creator"
+import { GravityComponent, PlanetaryComponent } from "./components/gravity"
+import { GravitySystem } from "./systems/gravity"
 
 class HitComponent extends TagComponent {}
 
@@ -37,7 +39,9 @@ export function game_init(options){
     world.registerComponent(ActionListenerComponent)
     world.registerComponent(CameraComponent)
     world.registerComponent(LightComponent)
+    world.registerComponent(GravityComponent)
     world.registerComponent(OrbitComponent)
+    world.registerComponent(PlanetaryComponent)
 
     // register our systems
     if(options.touch){
@@ -47,6 +51,7 @@ export function game_init(options){
     }
     world.registerSystem(HUDSystem)
     world.registerSystem(OrbitSystem)
+    world.registerSystem(GravitySystem)
     world.registerSystem(Physics2dMeshUpdateSystem)
     world.registerSystem(RenderSystem,{
         render_element_id:options.render_element,
@@ -93,6 +98,7 @@ export function game_init(options){
             avel: Math.random()*0.05 + 0.05,
             aoffset: Math.random() * Math.PI * 2,
         })
+        p.addComponent(PlanetaryComponent)
         const ring = world.createEntity()
         ring.addComponent(ModelComponent,{
             geometry:"orbit",
@@ -101,7 +107,18 @@ export function game_init(options){
         })
         ring.addComponent(LocRotComponent)
     }
-  
+ 
+    const b = world.createEntity()    
+    b.addComponent(ModelComponent,{geometry:"box",scale:new Vector3(0.2,0.2,0.2),material:"red"})
+    b.addComponent(LocRotComponent,{location:new Vector3(50,0,0)})
+    b.addComponent(Body2dComponent,{
+        body_type:"dynamic",
+        width:0.2/2,
+        height:0.2/2,
+        velocity: new Vector2(-5,0),
+    })
+    b.addComponent(GravityComponent) 
+
     start_game(world)
 
     return world
