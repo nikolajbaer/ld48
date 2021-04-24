@@ -18,18 +18,36 @@ export class PlanetMeshCreator extends BaseMeshCreator {
     }
 
     create_mesh(geometry,material,receiveShadow,castShadow){
-        if(geometry == "sputnik"){
-            return this.create_sputnik()
-        }else{
-            const m =new THREE.Mesh(
-                this.BASE_GEOMETRIES[geometry],
-                this.BASE_MATERIALS[material]?this.BASE_MATERIALS[material]:new THREE.MeshLambertMaterial({ color: material })
-            )
-            m.receiveShadow = receiveShadow
-            m.castShadow = castShadow
-            return m
-
+        switch(geometry){
+            case "sputnik":
+                return this.create_sputnik()
+            case "stars":
+                return this.create_stars()
+            default:
+                const m =new THREE.Mesh(
+                    this.BASE_GEOMETRIES[geometry],
+                    this.BASE_MATERIALS[material]?this.BASE_MATERIALS[material]:new THREE.MeshLambertMaterial({ color: material })
+                )
+                m.receiveShadow = receiveShadow
+                m.castShadow = castShadow
+                return m
         }
+    }
+    
+    create_stars(){
+        const R = 250
+        const vertices = [];
+        for ( let i = 0; i < 5000; i ++ ) {
+            const p = new THREE.Vector3(R,0,0)
+            const a = new THREE.Euler( -Math.random() * Math.PI, 0, Math.random() * Math.PI, 'XYZ' );
+            p.applyEuler(a)
+        	vertices.push( p.x, p.y, p.z );
+        }
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+        const material = new THREE.PointsMaterial( { color: 0x888888 } );
+        return new THREE.Points( geometry, material );
     }
 
     create_sputnik(){
@@ -69,7 +87,7 @@ export class PlanetMeshCreator extends BaseMeshCreator {
 
         // Create Prediction child mesh
         const pgeom = new THREE.BufferGeometry()
-        const pmat = new THREE.LineBasicMaterial({ color: 0x0033bb, transparent: true, opacity: 0.5 })
+        const pmat = new THREE.LineBasicMaterial({ color: 0x0033ff, transparent: true, opacity: 0.8 })
         const predictor = new THREE.Line(pgeom,pmat)
         mesh.add(predictor)
 

@@ -19,6 +19,7 @@ import { ThrusterComponent } from "./components/thrusters"
 import { ThrustersSystem } from "./systems/thrusters"
 import { PredictorComponent } from "./components/path_predict"
 import { PathPredictorSystem } from "./systems/path_predict"
+import { StaticDrawUsage } from "three"
 
 class HitComponent extends TagComponent {}
 
@@ -85,7 +86,11 @@ export function game_init(options){
     const sun_light = world.createEntity()
     sun_light.addComponent(LocRotComponent,{location: new Vector3(0,0,0)})
     sun_light.addComponent(LightComponent,{type:"point",cast_shadow:true,intensity:0.9,decay:1000,color: 0xFFFFaa })
-    
+
+    const stars = world.createEntity()
+    stars.addComponent(ModelComponent,{geometry:"stars"})
+    stars.addComponent(LocRotComponent)
+
     const PLANET_DENSITY = 1000
     const planet_mass = r => PLANET_DENSITY * 4/3 * Math.PI * Math.pow(r,3)
 
