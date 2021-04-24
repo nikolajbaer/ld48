@@ -20,6 +20,9 @@ import { ThrustersSystem } from "./systems/thrusters"
 import { PredictorComponent } from "./components/path_predict"
 import { PathPredictorSystem } from "./systems/path_predict"
 import { StaticDrawUsage } from "three"
+import { PlanetCollisionSystem } from "./systems/planet_collision"
+import { ExplosionComponent } from "./components/explosion"
+import { ExplosionSystem } from "./systems/explosion"
 
 class HitComponent extends TagComponent {}
 
@@ -50,6 +53,7 @@ export function game_init(options){
     world.registerComponent(ThrusterComponent)
     world.registerComponent(PredictorComponent)
     world.registerComponent(Collision2dComponent)
+    world.registerComponent(ExplosionComponent)
 
     // register our systems
     if(options.touch){
@@ -62,6 +66,8 @@ export function game_init(options){
     world.registerSystem(GravitySystem)
     world.registerSystem(ThrustersSystem)
     world.registerSystem(PathPredictorSystem)
+    world.registerSystem(PlanetCollisionSystem)
+    world.registerSystem(ExplosionSystem)
     world.registerSystem(Physics2dMeshUpdateSystem)
     world.registerSystem(RenderSystem,{
         render_element_id:options.render_element,
@@ -97,7 +103,7 @@ export function game_init(options){
 
     // add a sun 
     const sun  = world.createEntity()
-    sun.addComponent(ModelComponent,{geometry:"sphere",material:"sun",scale:new Vector3(3,3,3)})
+    sun.addComponent(ModelComponent,{geometry:"sphere",material:"sun",scale:new Vector3(3,3,3),receive_shadow:false})
     sun.addComponent(LocRotComponent,{location: new Vector3(0,0,0)})
     sun.addComponent(Body2dComponent,{body_type: "static",width:3,height:3})
     sun.addComponent(PlanetaryComponent,{mass:planet_mass(3)})
@@ -128,6 +134,8 @@ export function game_init(options){
             geometry:"orbit",
             scale:new Vector3(r,r,r),
             material:"trail",
+            cast_shadow: false,
+            receive_shadow: false,
         })
         ring.addComponent(LocRotComponent)
     }

@@ -14,7 +14,8 @@ export class PlanetMeshCreator extends BaseMeshCreator {
         "ground": new THREE.MeshLambertMaterial( { color: 0x333332 } ),
         "default": new THREE.MeshLambertMaterial( { color: 0x9999fe } ),
         "trail": new THREE.MeshBasicMaterial( { color: 0xffffff, opacity: 0.1, transparent: true }),
-        "sun": new THREE.MeshBasicMaterial({ color: 0xFFFF00 })
+        "sun": new THREE.MeshBasicMaterial({ color: 0xFFFF00 }),
+        "explosion": new THREE.MeshBasicMaterial({ color: 0xFFAA00 }),
     }
 
     create_mesh(geometry,material,receiveShadow,castShadow){

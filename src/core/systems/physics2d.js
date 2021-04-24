@@ -138,10 +138,12 @@ export class Physics2dMeshUpdateSystem extends System {
             obj3d.position.y = pos.y
             obj3d.rotation.z = ang
 
-            loc.location.x = pos.x
-            loc.location.y = pos.y
-            loc.location.z = 0 
-            loc.rotation.z = ang
+            if(loc){ // might be gone on final removal
+                loc.location.x = pos.x
+                loc.location.y = pos.y
+                loc.location.z = 0 
+                loc.rotation.z = ang
+            }
         })
     }
 }

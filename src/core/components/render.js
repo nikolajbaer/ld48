@@ -11,7 +11,8 @@ ModelComponent.schema = {
   geometry: { type: Types.String, default: 'box' },
   material: { type: Types.String, default: 'default' },
   scale: { type: Vector3Type, default: new Vector3(1,1,1) },
-  shadow: { type: Types.Boolean, default: true },
+  cast_shadow: { type: Types.Boolean, default: true },
+  receive_shadow: { type: Types.Boolean, default: true },
 }
 
 export class CameraFollowComponent extends Component {}
