@@ -13,6 +13,8 @@ export class GravitySystem extends System {
             const planet = {
                 pos:p.getComponent(Physics2dComponent).body.getPosition().clone(),
                 mass:p.getComponent(PlanetaryComponent).mass,
+                radius: p.getComponent(PlanetaryComponent).radius,
+                land_vel: p.getComponent(PlanetaryComponent).land_vel,
             }
             return planet
         })
@@ -33,6 +35,7 @@ export class GravitySystem extends System {
         planets.forEach( p => {
             const gv = p.pos.clone()
             gv.sub(pos)
+            p.distance = gv.length()
             const gf = this.G * ((p.mass * mass)/Math.pow(gv.length(),2))
             gv.normalize()
             gv.mul(gf)

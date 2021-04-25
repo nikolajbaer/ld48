@@ -1,19 +1,23 @@
 import { System } from "ecsy"
+import { Int8BufferAttribute } from "three"
 import { HUDDataComponent } from "../../../src/core/components/hud"
 import { Physics2dComponent,Collision2dComponent } from "../../../src/core/components/physics2d"
 import { LocRotComponent } from "../../../src/core/components/position"
 import { Vector3 } from "../../../src/core/ecs_types"
 import { DistanceTraveledComponent } from "../components/distance"
 import { ExplosionComponent } from "../components/explosion"
+import { PlanetaryComponent } from "../components/gravity"
 
 export class PlanetCollisionSystem extends System {
-    init(attributes){
-        this.crash_min = (attributes && attributes.crash_min)?attributes.crash_min:5
-    }
     execute(delta,time){
         this.queries.collide.results.forEach( e => {
             const c = e.getComponent(Collision2dComponent) 
-            if(c.normal_impulse > this.crash_min || c.entity.name == "sun"){
+            let max_vel = 0
+            if(c.entity.hasComponent(PlanetaryComponent)){
+                const planet = c.entity.getComponent(PlanetaryComponent)
+                max_vel = planet.land_vel
+            }
+            if(c.normal_impulse > max_vel){
                 const pos = e.getComponent(Physics2dComponent).body.getPosition()
                 const ex = this.world.createEntity()
                 ex.addComponent(ExplosionComponent)

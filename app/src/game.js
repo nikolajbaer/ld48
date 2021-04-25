@@ -134,7 +134,7 @@ export function game_init(options){
             avel: Math.random()*0.05 + 0.05,
             aoffset: Math.random() * Math.PI * 2,
         })
-        p.addComponent(PlanetaryComponent,{mass:planet_mass(s)})
+        p.addComponent(PlanetaryComponent,{mass:planet_mass(s),radius:s,land_vel:5})
         p.name = "Planet "+ (i+1)
 
         const ring = world.createEntity()
@@ -178,7 +178,7 @@ function start_game(world){
     let paused = false
 
     window.addEventListener("keypress", (e) => {
-        if(e.code == "Escape"){
+        if(e.code == " "){
             paused = !paused
         }
     })
