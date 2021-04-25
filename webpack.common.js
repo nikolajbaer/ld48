@@ -24,16 +24,7 @@ module.exports = {
           }]
         },
         {
-          test: /\.mp3$/,
-          use: [{
-            loader: 'url-loader',
-            options: {
-              outputPath: 'static'
-            }
-          }]
-        },
-        {
-            test: /\.(png|svg|jpg|jpeg|gif|pdf|fbx|glb)$/,
+            test: /\.(png|svg|jpg|jpeg|gif|pdf|fbx|glb|mp3)$/,
             use: [{
                 loader: 'file-loader',
                 options: {

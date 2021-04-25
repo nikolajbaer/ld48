@@ -1,9 +1,11 @@
 import * as THREE from "three"
 import { BaseMeshCreator } from "../../src/core/systems/render"
-import * as planetVertexShader from "../shaders/planet.vert"
-import * as planetFragmentShader from "../shaders/planet.frag"
 import sputnikFBX from "../assets/sputnik.fbx"
+import planet2FBX from "../assets/planets/p2.fbx"
+import planet3FBX from "../assets/planets/p3.fbx"
+
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+console.log(sputnikFBX);
 
 export class PlanetMeshCreator extends BaseMeshCreator {
     BASE_GEOMETRIES = {
@@ -26,9 +28,17 @@ export class PlanetMeshCreator extends BaseMeshCreator {
         "sputnik": {url:sputnikFBX,obj:null}
     }
 
+    PLANETS = [
+        {url: planet2FBX, obj:null},
+        {url: planet3FBX, obj:null}
+    ]
+
     load(){
+        // TODO DEBUGGING NEVER DO THIS
+        window.PLANETS = this.PLANETS;
+
         // Todo don't make empty promises
-        const manager = new THREE.LoadingManager();
+        const manager = new THREE.LoadingManager()
         const loader = new FBXLoader(manager)
 
         return new Promise((all_resolve,all_reject) => {
@@ -40,6 +50,18 @@ export class PlanetMeshCreator extends BaseMeshCreator {
                             prefab.obj = fbx
                             console.log("loaded ",prefab.url,prefab.obj)
                             resolve()
+                        })
+                    })
+                }),
+                this.PLANETS.map(prefab => {
+                    return new Promise((resolve, _reject) => {
+                        loader.load(prefab.url, (fbx) => {
+                            prefab.obj = fbx
+                            prefab.obj.scale.set(0.001, 0.001, 0.001);
+                            prefab.obj.castShadow = true;
+                            prefab.obj.receiveShadow = true;
+                            console.log("loaded planet ", prefab.url, prefab.obj);
+                            resolve();
                         })
                     })
                 })
@@ -135,20 +157,12 @@ export class PlanetMeshCreator extends BaseMeshCreator {
     }
 
     create_planet() {
-        const u = {
-            time: { type: "f", value: 1.0 },
-            resolution: { type: "v2", value: new THREE.Vector2() }
-        }
-        const planetSurface = new THREE.Mesh(
-            new THREE.SphereGeometry(0.5, 32, 32), 
-            new THREE.ShaderMaterial({
-                uniforms: u, vertexShader: planetVertexShader, fragmentShader: planetFragmentShader
-            })
-        )
-
-        const group = new THREE.Group();
-        group.add(planetSurface);
-
-        return group
+        const obj = new THREE.Object3D()
+        const planet_idx = Math.floor(Math.random() * this.PLANETS.length)
+        const planet = PLANETS[planet_idx].obj.clone();
+        window.planet_ins ||= [];
+        obj.add(planet);
+        window.planet_ins.push(obj);
+        return obj;
     }
 }
