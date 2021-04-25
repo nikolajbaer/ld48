@@ -19,7 +19,11 @@ export class OrbitSystem extends System {
             const orbit = e.getComponent(OrbitComponent)
             const pos = this.step_orbit_pos(orbit.avel,orbit.aoffset,orbit.radius,orbit.center,time)
             const ra = orbit.arot * time
+            const cur_pos = body.getPosition().clone()
+            const v = cur_pos.sub(pos)
+            v.normalize()
             body.setTransform(pos,ra)
+            body.setLinearVelocity(v.mul(1/delta))
         })
     }
 }

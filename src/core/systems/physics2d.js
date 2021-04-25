@@ -105,7 +105,7 @@ export class Physics2dSystem extends System {
             case "weld":
                 console.log("welding ",body,body1)
                 const j = this.physics_world.createJoint(pl.WeldJoint(joint.joint_config,body,body1,joint.anchor_a))
-                console.log("New Joint:",j)
+                console.log("New Joint:",j,j.getLocalAnchorA(),j.getLocalAnchorB())
                 e.addComponent(PhysicsJoint2dComponent,{joint:j})
                 break;
             default:
