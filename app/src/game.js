@@ -143,9 +143,9 @@ export function game_init(options){
             mass:planet_mass(s),
             radius:s/2,
             land_vel:5,
-            rotSpeed: Math.random() / 10, // degrees per tick?
+            rotSpeed: (Math.random() - 0.5) / 10, // degrees per tick?
             axis: Math.random() * 2 * Math.PI, // 0-360 degrees of axis rotation
-            satRotSpeed: Math.random() / 10
+            satRotSpeed: (Math.random() - 0.5) / 100
         })
         p.name = "Planet "+ (i+1)
 
