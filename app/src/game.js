@@ -125,7 +125,7 @@ export function game_init(options){
         const p = world.createEntity()
         const r = 5 + i * 1.5 
         const s = Math.random()*1 + 0.5
-        p.addComponent(ModelComponent,{geometry:"sphere",scale:new Vector3(s,s,s)})
+        p.addComponent(ModelComponent,{geometry:"planet",scale:new Vector3(s,s,s)})
         p.addComponent(LocRotComponent,{location: new Vector3(r,0,0)})
         p.addComponent(Body2dComponent,{
             body_type: "kinematic",
