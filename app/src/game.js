@@ -13,6 +13,7 @@ import { TagComponent } from "ecsy"
 import { OrbitComponent } from "./components/orbit"
 import { OrbitSystem } from "./systems/orbit"
 import { PlanetMeshCreator } from "./mesh_creator"
+import { PlanetarySystem } from "./systems/planetary_system"
 import { GravityComponent, PlanetaryComponent } from "./components/gravity"
 import { GravitySystem } from "./systems/gravity"
 import { ThrusterComponent } from "./components/thrusters"
@@ -78,6 +79,7 @@ export function game_init(options){
     world.registerSystem(ExplosionSystem)
     world.registerSystem(Physics2dMeshUpdateSystem)
     world.registerSystem(PlanetHUDUpdateSystem)
+    world.registerSystem(PlanetarySystem)
     world.registerSystem(RenderSystem,{
         render_element_id:options.render_element,
         mesh_creator: options.mesh_creator,
@@ -137,7 +139,14 @@ export function game_init(options){
             avel: Math.random()*0.05 + 0.05,
             aoffset: Math.random() * Math.PI * 2,
         })
-        p.addComponent(PlanetaryComponent,{mass:planet_mass(s),radius:s/2,land_vel:5})
+        p.addComponent(PlanetaryComponent,{
+            mass:planet_mass(s),
+            radius:s/2,
+            land_vel:5,
+            rotSpeed: Math.random() / 10, // degrees per tick?
+            axis: Math.random() * 2 * Math.PI, // 0-360 degrees of axis rotation
+            satRotSpeed: Math.random() / 10
+        })
         p.name = "Planet "+ (i+1)
 
         const ring = world.createEntity()

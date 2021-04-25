@@ -58,6 +58,8 @@ export class PlanetMeshCreator extends BaseMeshCreator {
                         loader.load(prefab.url, (fbx) => {
                             prefab.obj = fbx
                             prefab.obj.scale.set(0.001, 0.001, 0.001);
+                            prefab.obj.castShadow = true;
+                            prefab.obj.receiveShadow = true;
                             console.log("loaded planet ", prefab.url, prefab.obj);
                             resolve();
                         })
@@ -157,8 +159,10 @@ export class PlanetMeshCreator extends BaseMeshCreator {
     create_planet() {
         const obj = new THREE.Object3D()
         const planet_idx = Math.floor(Math.random() * this.PLANETS.length)
-        console.log("using mesh "+planet_idx)
-        obj.add(PLANETS[planet_idx].obj.clone());
+        const planet = PLANETS[planet_idx].obj.clone();
+        window.planet_ins ||= [];
+        obj.add(planet);
+        window.planet_ins.push(obj);
         return obj;
     }
 }

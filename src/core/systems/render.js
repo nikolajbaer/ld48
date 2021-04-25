@@ -94,7 +94,7 @@ export class RenderSystem extends System {
         const mesh = this.mesh_creator.create_mesh(model.geometry,model.material,model.cast_shadow,model.receive_shadow)
         mesh.scale.set( model.scale.x,model.scale.y,model.scale.z)
         mesh.position.set(loc.location.x,loc.location.y,loc.location.z)
-        mesh.rotation.set(loc.rotation.x,loc.rotation.y,loc.rotation.z)
+        //mesh.rotation.set(loc.rotation.x,loc.rotation.y,loc.rotation.z)
         this.scene.add( mesh )
         e.addComponent( Obj3dComponent, { obj: mesh })
     }
