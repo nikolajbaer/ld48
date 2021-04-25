@@ -16,7 +16,7 @@ export class SoundLoader {
         console.log('loading music..');
         return new Promise((resolve,reject) => {
             console.log("loading music ", this.MUSIC['title'].src)
-            this.MUSIC['title'].obj = new Howl({src: this.MUSIC['title'].src});
+            this.MUSIC['title'].obj = new Howl({loop: true, volume: 0.5, src: this.MUSIC['title'].src});
             this.MUSIC['title'].obj.once('load', function() {
                 console.log('loaded, resolving!');
                 resolve();
