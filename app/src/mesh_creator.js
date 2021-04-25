@@ -47,6 +47,8 @@ export class PlanetMeshCreator extends BaseMeshCreator {
                 return this.create_sputnik()
             case "stars":
                 return this.create_stars()
+            case "planet":
+                return this.create_planet()
             default:
                 const m =new THREE.Mesh(
                     this.BASE_GEOMETRIES[geometry],
@@ -136,6 +138,7 @@ export class PlanetMeshCreator extends BaseMeshCreator {
         )
 
         const group = new THREE.Group();
+        group.add(planetSurface);
 
         return group
     }
