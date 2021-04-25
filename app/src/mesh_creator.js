@@ -31,12 +31,21 @@ export class PlanetMeshCreator extends BaseMeshCreator {
         const manager = new THREE.LoadingManager();
         const loader = new FBXLoader(manager)
 
-        return new Promise((resolve,reject) => {
-            console.log("loading ",this.PREFABS['sputnik'].url)
-            loader.load(this.PREFABS['sputnik'].url, (fbx) =>{
-                this.PREFABS['sputnik'].obj = fbx
-                console.log("loaded ",fbx)
-                resolve()
+        return new Promise((all_resolve,all_reject) => {
+            console.log("loading prefabs ")
+            return Promise.all(
+                Object.values(this.PREFABS).map( prefab => {
+                    return new Promise((resolve,reject) => {
+                        loader.load(prefab.url, (fbx) =>{
+                            prefab.obj = fbx
+                            console.log("loaded ",prefab.url,prefab.obj)
+                            resolve()
+                        })
+                    })
+                })
+            ).then(() => {
+                console.log("prefabs loaded")
+                all_resolve()
             })
         })
     }

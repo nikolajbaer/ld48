@@ -98,7 +98,11 @@ export class PathPredictorSystem extends System {
 
             this.queries.planets.results.forEach( p => {
                 if(p == targeted){
-                    p.addComponent(TargetedComponent,{impact_vel:impact_vel})
+                    if(p.hasComponent(TargetedComponent)){
+                        p.getMutableComponent(TargetedComponent).impact_vel = impact_vel
+                    }else{
+                        p.addComponent(TargetedComponent,{impact_vel:impact_vel})
+                    }
                 }else if(p.hasComponent(TargetedComponent)){
                     p.removeComponent(TargetedComponent)
                 }
