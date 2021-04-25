@@ -89,11 +89,12 @@ export function game_init(options){
 
     const c = world.createEntity()
     c.addComponent(CameraComponent,{
-        lookAt: new Vector3(0,0,0),
+        lookAt: new Vector3(0,0,-5),
         current: true,
         upVec: new Vector3(0,0,1),
+        fov: 50,
     })
-    c.addComponent(LocRotComponent,{location: new Vector3(0,-20,20)})
+    c.addComponent(LocRotComponent,{location: new Vector3(0,-30,20)})
 
     const l1 = world.createEntity()
     l1.addComponent(LocRotComponent,{location: new Vector3(0,0,0)})
