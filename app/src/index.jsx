@@ -8,8 +8,7 @@ import "./style.css"
 export class PlanetGame extends React.Component {
     constructor(props){
         super(props)
-        this.state = {
-            playing: false,
+        this.state = { playing: false,
             fullscreen: false,
             playSound: false,
         }
@@ -20,18 +19,39 @@ export class PlanetGame extends React.Component {
         this.setState({playing:true}) 
     } 
 
+    exitToMenu(){
+        this.setState({playing:false}) 
+    }
+
+    gameOverMenu(distance){
+        return (
+            <div className="menu">
+                <h1>Game Over</h1>
+                <p>You traveled {format_int(distance)} million kilometers!</p>
+
+                <button onClick={()=>this.exitToMenu()}>PLAY AGAIN</button>
+            </div>
+        )
+    }
+
     render(){
        
         if(this.state.playing){
             return  (
                 <GameComponent init_game={game_init}>
-                    {hudState => 
+                    {hudState => (
                         <HUDView hudState={hudState}>
                             {hudState => (
-                                <div>{Math.round(hudState.distance).toLocaleString({minimumFractionDigits: 0,maximumFractionDigits: 0}) } million km</div>
+                                <React.Fragment>
+                                    {(hudState != undefined && hudState.game_over)?this.gameOverMenu(hudState.distance):""}
+                                    <div className="score">
+                                        <div>{ format_int(hudState.distance) } mkm</div>
+                                        <div>{ format_int(hudState.velocity) } mkm/s</div>
+                                    </div>
+                                </React.Fragment>
                             )}
                         </HUDView>
-                    }
+                    )}
                 </GameComponent>
             )
         }else{
@@ -48,3 +68,6 @@ export class PlanetGame extends React.Component {
 
 ReactDOM.render( <PlanetGame />, document.getElementById("app"))
 
+function format_int(n){
+    return Math.round(n).toLocaleString({minimumFractionDigits: 0,maximumFractionDigits: 0})
+}

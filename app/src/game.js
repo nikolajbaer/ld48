@@ -163,7 +163,7 @@ export function game_init(options){
     b.addComponent(ThrusterComponent,{thrust:3})
     b.addComponent(ActionListenerComponent)
     b.addComponent(PredictorComponent,{ticks:239})
-    b.addComponent(HUDDataComponent,{data:{distance:0,fuel:100,game_over:false}})
+    b.addComponent(HUDDataComponent,{data:{distance:0,fuel:100,game_over:false,velocity:0}})
     b.addComponent(DistanceTraveledComponent)
     b.name = "sputnik"
 

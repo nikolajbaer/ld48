@@ -12,10 +12,17 @@ body {
 
 .hud {
     position: absolute;
-    top: 4px;
-    left: 4px;
+    top: 0px;
+    left: 0px;
     color: white;
     font-family: monospace;
+    width: 100%;
+    height: 100%;
+}
+
+.hud .score {
+    top: 4px;
+    left: 4px;
 }
 
 .menu {
