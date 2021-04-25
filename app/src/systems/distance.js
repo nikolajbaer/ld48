@@ -1,4 +1,5 @@
 import { System,Not } from "ecsy"
+import { HUDDataComponent } from "../../../src/core/components/hud"
 import { Physics2dComponent } from "../../../src/core/components/physics2d"
 import { Vector2 } from "../../../src/core/ecs_types"
 import { DistanceTraveledComponent } from "../components/distance"

@@ -23,6 +23,9 @@ import { PlanetCollisionSystem } from "./systems/planet_collision"
 import { ExplosionComponent } from "./components/explosion"
 import { ExplosionSystem } from "./systems/explosion"
 import { GameHudState } from "./hud_state"
+import { DistanceTraveledComponent } from "./components/distance"
+import { DistanceSystem } from "./systems/distance"
+import { PlanetHUDUpdateSystem } from "./systems/hud"
 
 class HitComponent extends TagComponent {}
 
@@ -54,6 +57,7 @@ export function game_init(options){
     world.registerComponent(PredictorComponent)
     world.registerComponent(Collision2dComponent)
     world.registerComponent(ExplosionComponent)
+    world.registerComponent(DistanceTraveledComponent)
 
     // register our systems
     if(options.touch){
@@ -69,8 +73,10 @@ export function game_init(options){
     world.registerSystem(ThrustersSystem)
     world.registerSystem(PathPredictorSystem)
     world.registerSystem(PlanetCollisionSystem)
+    world.registerSystem(DistanceSystem)
     world.registerSystem(ExplosionSystem)
     world.registerSystem(Physics2dMeshUpdateSystem)
+    world.registerSystem(PlanetHUDUpdateSystem)
     world.registerSystem(RenderSystem,{
         render_element_id:options.render_element,
         mesh_creator: new PlanetMeshCreator(),
@@ -157,6 +163,8 @@ export function game_init(options){
     b.addComponent(ThrusterComponent,{thrust:4})
     b.addComponent(ActionListenerComponent)
     b.addComponent(PredictorComponent,{ticks:240})
+    b.addComponent(HUDDataComponent)
+    b.addComponent(DistanceTraveledComponent)
     b.name = "sputnik"
 
     start_game(world)

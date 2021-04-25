@@ -12,7 +12,7 @@ export class PlanetCollisionSystem extends System {
     execute(delta,time){
         this.queries.collide.results.forEach( e => {
             const c = e.getComponent(Collision2dComponent) 
-            if(c.normal_impulse > this.crash_min){
+            if(c.normal_impulse > this.crash_min || c.entity.name == "sun"){
                 const pos = e.getComponent(Physics2dComponent).body.getPosition()
                 const ex = this.world.createEntity()
                 ex.addComponent(ExplosionComponent)
