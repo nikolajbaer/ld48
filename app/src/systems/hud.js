@@ -4,6 +4,7 @@ import { Physics2dComponent } from "../../../src/core/components/physics2d"
 import { DistanceTraveledComponent } from "../components/distance"
 import { PlanetaryComponent } from "../components/gravity"
 import { TargetedComponent } from "../components/path_predict"
+import { PlanetLandingComponent } from "../components/planet"
 
 export class PlanetHUDUpdateSystem extends System {
     execute(delta,time){
@@ -23,6 +24,13 @@ export class PlanetHUDUpdateSystem extends System {
                 data.land_Vel = planet.land_vel
             }else{
                 data.targeted_planet = null
+            }
+
+            if(e.hasComponent(PlanetLandingComponent)){
+                const planet = e.getComponent(PlanetLandingComponent)
+                data.landed_planet = planet.entity.name
+            }else{
+                data.landed_planet = null
             }
 
             // TODO add fuel?

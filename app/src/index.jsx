@@ -64,6 +64,7 @@ export class PlanetGame extends React.Component {
                                     <div className="score">
                                         <div>{ format_int(hudState.distance) } mkm</div>
                                         <div>{ format_int(hudState.velocity) } mkm/s</div>
+                                        {(hudState != undefined && hudState.landed_planet)?<div>Landed on {hudState.landed_planet}</div>:""}
                                     </div>
                                 </React.Fragment>
                             )}

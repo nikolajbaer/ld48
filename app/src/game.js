@@ -1,7 +1,7 @@
 import { World } from "ecsy"
 import { CameraComponent, Obj3dComponent, ModelComponent, LightComponent } from "../../src/core/components/render"
 import { LocRotComponent } from "../../src/core/components/position"
-import { Body2dComponent, Collision2dComponent, Physics2dComponent  } from "../../src/core/components/physics2d"
+import { Body2dComponent, Collision2dComponent, Joint2dComponent, Physics2dComponent, PhysicsJoint2dComponent  } from "../../src/core/components/physics2d"
 import { HUDDataComponent } from "../../src/core/components/hud"
 import { RenderSystem } from "../../src/core/systems/render"
 import { Physics2dMeshUpdateSystem, Physics2dSystem } from "../../src/core/systems/physics2d"
@@ -26,6 +26,7 @@ import { GameHudState } from "./hud_state"
 import { DistanceTraveledComponent } from "./components/distance"
 import { DistanceSystem } from "./systems/distance"
 import { PlanetHUDUpdateSystem } from "./systems/hud"
+import { PlanetLandingComponent } from "./components/planet"
 
 class HitComponent extends TagComponent {}
 
@@ -59,6 +60,9 @@ export function game_init(options){
     world.registerComponent(ExplosionComponent)
     world.registerComponent(DistanceTraveledComponent)
     world.registerComponent(TargetedComponent)
+    world.registerComponent(Joint2dComponent)
+    world.registerComponent(PhysicsJoint2dComponent)
+    world.registerComponent(PlanetLandingComponent)
 
     // register our systems
     if(options.touch){
