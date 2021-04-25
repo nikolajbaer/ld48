@@ -43,7 +43,6 @@ export class GravitySystem extends System {
         })
         return g
     }
-
 }
 
 GravitySystem.queries = {

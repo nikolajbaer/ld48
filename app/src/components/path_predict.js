@@ -7,3 +7,8 @@ PredictorComponent.schema = {
     landing: { type: Types.Boolean, default: null },
     geom_buffer: { type: Types.Ref },
 }
+
+export class TargetedComponent extends Component {}
+TargetedComponent.schema = {
+    impact_vel: { type: Types.Number }
+}

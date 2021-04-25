@@ -153,6 +153,11 @@ export class BaseMeshCreator {
     create_mesh(geometry,material){
         return new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshLambertMaterial({color: 0x9999fe }))
     }
+
+    load(){
+        // return a promise (in this case empty) to do "loading" work
+        return Promise((resolve,reject) => resolve() )
+    }
 }
 
 class DefaultMeshCreator extends BaseMeshCreator {

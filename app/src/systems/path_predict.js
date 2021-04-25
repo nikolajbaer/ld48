@@ -4,7 +4,7 @@ import { OrbitComponent } from "../components/orbit"
 import { GravityComponent, PlanetaryComponent } from "../components/gravity"
 import { GravitySystem } from "./gravity"
 import { OrbitSystem } from "./orbit"
-import { PredictorComponent } from "../components/path_predict"
+import { PredictorComponent,TargetedComponent } from "../components/path_predict"
 import { Obj3dComponent } from "../../../src/core/components/render"
 import * as THREE from "three"
 
@@ -23,6 +23,7 @@ export class PathPredictorSystem extends System {
                 avel: null,
                 aoffset: null,
                 center: null,
+                planet: p,
             }
             if(p.hasComponent(OrbitComponent)){
                 const orbit = p.getComponent(OrbitComponent)
@@ -53,7 +54,9 @@ export class PathPredictorSystem extends System {
 
             const t0 = time
             const predictions = []
-            let landing = null
+            let landing = null 
+            let targeted = null
+            let impact_vel = null
             for(var t=0;t<predict.ticks; t++){
                 const t1 = time + (t*predict.delta)
                 // step all planets
@@ -79,10 +82,28 @@ export class PathPredictorSystem extends System {
 
                 const impacts = planets.filter( p => p.distance < p.radius )
                 if(impacts.length > 0){
-                    landing = vel.length() < impacts[0].land_vel
+                    impact_vel = vel.length()
+                    const ratio = impact_vel/impacts[0].land_vel
+                    if(ratio < 0.9){
+                        landing = 2  // good to go!
+                    }else if(ratio < 1.25){
+                        landing = 1 // yellow
+                    }else{
+                        landing = 0 // red
+                    }
+                    targeted = impacts[0].planet
                     break
                 }
             }
+
+            this.queries.planets.results.forEach( p => {
+                if(p == targeted){
+                    p.addComponent(TargetedComponent,{impact_vel:impact_vel})
+                }else if(p.hasComponent(TargetedComponent)){
+                    p.removeComponent(TargetedComponent)
+                }
+            })
+            
             // Now what with predictions?
             //console.log(predictions)
             predictor_mesh.geometry.setFromPoints(predictions)
@@ -90,10 +111,13 @@ export class PathPredictorSystem extends System {
                 case null:
                     predictor_mesh.material.color.setHex(0x00aaff)
                     break
-                case true:
+                case 2:
                     predictor_mesh.material.color.setHex(0x00ff00)
                     break;
-                case false:
+                case 1:
+                    predictor_mesh.material.color.setHex(0xffff00)
+                    break;
+                case 0:
                     predictor_mesh.material.color.setHex(0xff0000)
                     break;
             }

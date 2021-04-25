@@ -17,7 +17,7 @@ import { GravityComponent, PlanetaryComponent } from "./components/gravity"
 import { GravitySystem } from "./systems/gravity"
 import { ThrusterComponent } from "./components/thrusters"
 import { ThrustersSystem } from "./systems/thrusters"
-import { PredictorComponent } from "./components/path_predict"
+import { PredictorComponent, TargetedComponent } from "./components/path_predict"
 import { PathPredictorSystem } from "./systems/path_predict"
 import { PlanetCollisionSystem } from "./systems/planet_collision"
 import { ExplosionComponent } from "./components/explosion"
@@ -58,6 +58,7 @@ export function game_init(options){
     world.registerComponent(Collision2dComponent)
     world.registerComponent(ExplosionComponent)
     world.registerComponent(DistanceTraveledComponent)
+    world.registerComponent(TargetedComponent)
 
     // register our systems
     if(options.touch){
@@ -111,10 +112,11 @@ export function game_init(options){
 
     // add a sun 
     const sun  = world.createEntity()
+    const SR = 3 // sun radius
     sun.addComponent(ModelComponent,{geometry:"sphere",material:"sun",scale:new Vector3(3,3,3),receive_shadow:false})
     sun.addComponent(LocRotComponent,{location: new Vector3(0,0,0)})
-    sun.addComponent(Body2dComponent,{body_type: "static",width:3,height:3})
-    sun.addComponent(PlanetaryComponent,{mass:planet_mass(3)})
+    sun.addComponent(Body2dComponent,{body_type: "static",width:SR,height:SR})
+    sun.addComponent(PlanetaryComponent,{mass:planet_mass(SR),radius:SR/2})
     sun.name = "sun"
 
     const n = 10 // num planets
@@ -134,7 +136,7 @@ export function game_init(options){
             avel: Math.random()*0.05 + 0.05,
             aoffset: Math.random() * Math.PI * 2,
         })
-        p.addComponent(PlanetaryComponent,{mass:planet_mass(s),radius:s,land_vel:5})
+        p.addComponent(PlanetaryComponent,{mass:planet_mass(s),radius:s/2,land_vel:5})
         p.name = "Planet "+ (i+1)
 
         const ring = world.createEntity()
@@ -162,7 +164,7 @@ export function game_init(options){
     b.addComponent(GravityComponent) 
     b.addComponent(ThrusterComponent,{thrust:3})
     b.addComponent(ActionListenerComponent)
-    b.addComponent(PredictorComponent,{ticks:239})
+    b.addComponent(PredictorComponent,{ticks:500,delta:1/30})
     b.addComponent(HUDDataComponent,{data:{distance:0,fuel:100,game_over:false,velocity:0}})
     b.addComponent(DistanceTraveledComponent)
     b.name = "sputnik"
