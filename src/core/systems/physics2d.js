@@ -44,7 +44,7 @@ export class Physics2dSystem extends System {
                 tan_impulse: contactImpulse.tangentImpulses[0],
             }) 
         }
-        console.log(entity_a.name,entity_b.name,contactImpulse)
+        //console.log(entity_a.name,entity_b.name,contactImpulse)
     }
 
     post_solve(contact, contactImpulse){
