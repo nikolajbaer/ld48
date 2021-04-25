@@ -23,6 +23,9 @@ export class GameComponent extends React.Component {
             game_over: () => this.handleGameOver(),
             game_paused: () => this.handleGamePaused()
         }
+        if(this.props.mesh_creator){
+            options.mesh_creator = this.props.mesh_creator
+        }
         const world = this.props.init_game(options)
         this.setState({
             hudState:world.getSystem(HUDSystem).state,

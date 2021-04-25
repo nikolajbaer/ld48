@@ -80,7 +80,7 @@ export function game_init(options){
     world.registerSystem(PlanetHUDUpdateSystem)
     world.registerSystem(RenderSystem,{
         render_element_id:options.render_element,
-        mesh_creator: new PlanetMeshCreator(),
+        mesh_creator: options.mesh_creator,
     })
 
     // Physics we have to tie in any custom collision handlers, where 

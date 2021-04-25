@@ -2,6 +2,8 @@ import * as THREE from "three"
 import { BaseMeshCreator } from "../../src/core/systems/render"
 import * as planetVertexShader from "../shaders/planet.vert"
 import * as planetFragmentShader from "../shaders/planet.frag"
+import sputnikFBX from "../assets/sputnik.fbx"
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
 export class PlanetMeshCreator extends BaseMeshCreator {
     BASE_GEOMETRIES = {
@@ -18,6 +20,25 @@ export class PlanetMeshCreator extends BaseMeshCreator {
         "trail": new THREE.MeshBasicMaterial( { color: 0xffffff, opacity: 0.1, transparent: true }),
         "sun": new THREE.MeshBasicMaterial({ color: 0xFFFF00 }),
         "explosion": new THREE.MeshBasicMaterial({ color: 0xFFAA00 }),
+    }
+
+    PREFABS = {
+        "sputnik": {url:sputnikFBX,obj:null}
+    }
+
+    load(){
+        // Todo don't make empty promises
+        const manager = new THREE.LoadingManager();
+        const loader = new FBXLoader(manager)
+
+        return new Promise((resolve,reject) => {
+            console.log("loading ",this.PREFABS['sputnik'].url)
+            loader.load(this.PREFABS['sputnik'].url, (fbx) =>{
+                this.PREFABS['sputnik'].obj = fbx
+                console.log("loaded ",fbx)
+                resolve()
+            })
+        })
     }
 
     create_mesh(geometry,material,receiveShadow,castShadow){
@@ -59,6 +80,11 @@ export class PlanetMeshCreator extends BaseMeshCreator {
         const mesh = new THREE.Mesh(geom,mat)
         mesh.receiveShadow = true
         mesh.castShadow = true
+        /*
+        // TODO size sputnk, and also change the way we visualize thrusters..
+        const mesh = new THREE.Object3D()
+        mesh.add(this.PREFABS['sputnik'].obj)
+        */ 
 
         // Create Thrust indicators
         const tgeom = new THREE.ConeGeometry(0.5,2,3,2,false)

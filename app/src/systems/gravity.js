@@ -36,7 +36,7 @@ export class GravitySystem extends System {
             const gv = p.pos.clone()
             gv.sub(pos)
             p.distance = gv.length()
-            const gf = this.G * ((p.mass * mass)/Math.pow(gv.length(),2))
+            const gf = (p.distance==0)?0:this.G * ((p.mass * mass)/Math.pow(gv.length(),2))
             gv.normalize()
             gv.mul(gf)
             g.add(gv) // add gravitational force from this body

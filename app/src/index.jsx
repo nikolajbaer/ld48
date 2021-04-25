@@ -2,13 +2,17 @@ import React from "react";
 import ReactDOM, { render } from "react-dom";
 import { GameComponent } from "../../src/core/ui_components/GameComponent"
 import { HUDView } from "../../src/core/ui_components/HUDView";
-import { game_init,asset_loader } from "./game.js"
+import { game_init } from "./game.js"
+import { PlanetMeshCreator } from "./mesh_creator";
 import "./style.css"
 
 export class PlanetGame extends React.Component {
     constructor(props){
         super(props)
-        this.state = { playing: false,
+        this.state = { 
+            playing: false,
+            loading: false,
+            mesh_creator: null,
             fullscreen: false,
             playSound: false,
         }
@@ -16,8 +20,21 @@ export class PlanetGame extends React.Component {
     }
     
     handleNewGame(){
-        this.setState({playing:true}) 
+        this.setState({loading:true}) 
+        if(this.state.mesh_creator == null){
+            const creator = new PlanetMeshCreator()
+            creator.load().then( () => {
+                this.startGame()
+            })
+            this.setState({mesh_creator:creator})
+        }else{
+            this.startGame()
+        }
     } 
+
+    startGame(){
+        this.setState({playing:true,loading:false})
+    }
 
     exitToMenu(){
         this.setState({playing:false}) 
@@ -38,7 +55,7 @@ export class PlanetGame extends React.Component {
        
         if(this.state.playing){
             return  (
-                <GameComponent init_game={game_init}>
+                <GameComponent init_game={game_init} mesh_creator={this.state.mesh_creator}>
                     {hudState => (
                         <HUDView hudState={hudState}>
                             {hudState => (
@@ -53,6 +70,12 @@ export class PlanetGame extends React.Component {
                         </HUDView>
                     )}
                 </GameComponent>
+            )
+        }else if(this.state.loading){
+            return (
+                <div className="menu">
+                    <p>LOADING ASSETS..</p>
+                </div>
             )
         }else{
             return (
