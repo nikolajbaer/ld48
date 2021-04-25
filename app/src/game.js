@@ -150,7 +150,7 @@ export function game_init(options){
  
     const b = world.createEntity()    
     b.addComponent(ModelComponent,{geometry:"sputnik",scale:new Vector3(0.2,0.2,0.2),material:"red"})
-    b.addComponent(LocRotComponent,{location:new Vector3(50,0,0)})
+    b.addComponent(LocRotComponent,{location:new Vector2(50,0,0)})
     b.addComponent(Body2dComponent,{
         body_type:"dynamic",
         width:0.2/2,
@@ -160,10 +160,10 @@ export function game_init(options){
         track_collisions: true,
     })
     b.addComponent(GravityComponent) 
-    b.addComponent(ThrusterComponent,{thrust:4})
+    b.addComponent(ThrusterComponent,{thrust:3})
     b.addComponent(ActionListenerComponent)
-    b.addComponent(PredictorComponent,{ticks:240})
-    b.addComponent(HUDDataComponent)
+    b.addComponent(PredictorComponent,{ticks:239})
+    b.addComponent(HUDDataComponent,{data:{distance:0,fuel:100,game_over:false}})
     b.addComponent(DistanceTraveledComponent)
     b.name = "sputnik"
 
@@ -178,7 +178,7 @@ function start_game(world){
     let paused = false
 
     window.addEventListener("keypress", (e) => {
-        if(e.key == " "){
+        if(e.code == "Escape"){
             paused = !paused
         }
     })

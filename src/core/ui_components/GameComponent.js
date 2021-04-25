@@ -18,12 +18,28 @@ export class GameComponent extends React.Component {
         if(this.state.world != null){
             this.state.world.stop()
         }
-        const options = {render_element: "render"}
+        const options = {
+            render_element: "render",
+            game_over: () => this.handleGameOver(),
+            game_paused: () => this.handleGamePaused()
+        }
         const world = this.props.init_game(options)
         this.setState({
             hudState:world.getSystem(HUDSystem).state,
             world:world
         })
+    }
+
+    handleGameOver(){
+        if(this.props.gameOverHandler){
+            this.props.gameOverHandler()
+        }
+    }
+
+    handleGamePaused(){
+        if(this.props.gamePausedHandler){
+            this.props.gamePausedHandler()
+        }
     }
 
     handleFullscreen(event){

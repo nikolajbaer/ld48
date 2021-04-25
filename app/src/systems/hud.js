@@ -5,10 +5,12 @@ import { DistanceTraveledComponent } from "../components/distance"
 export class PlanetHUDUpdateSystem extends System {
     execute(delta,time){
         this.queries.hud.results.forEach( e => {
-            const hud = e.getMutableComponent(HUDDataComponent)
+            const data = e.getMutableComponent(HUDDataComponent).data
             const dist = e.getComponent(DistanceTraveledComponent)
-            hud.key = "distance"
-            hud.value = dist.distance
+            data.distance = dist.distance
+
+            // TODO add fuel?
+
         })
     }
 }

@@ -2,6 +2,7 @@ body {
     margin: 0px;
     padding: 0px;
     background-color: black;
+    font-family: monospace;
 }
 
 #game {
@@ -15,4 +16,32 @@ body {
     left: 4px;
     color: white;
     font-family: monospace;
+}
+
+.menu {
+    position: absolute;
+    border-radius: 4px;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    border: solid 1px white;
+    text-align: center;
+    color: white;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+    font-size: 12pt;
+    background-color: #111;
+    padding: 16px;
+}
+
+.menu button {
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 4px;
+    padding: 4px;
+    cursor: pointer;
+    color: white;
+}
+.menu button:hover {
+    background-color: #333;
 }

@@ -5,7 +5,7 @@ export const HUDView = observer( ({ hudState,children }) => {
     const [name, setName ] = useState("")
 
     if(hudState == null){
-        return (<div>nohud</div>)
+        return ""
     }
 
     return (
