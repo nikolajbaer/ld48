@@ -1,8 +1,13 @@
 import * as THREE from "three"
 import { BaseMeshCreator } from "../../src/core/systems/render"
 import sputnikFBX from "../assets/sputnik.fbx"
+import planet1FBX from "../assets/planets/p1.fbx"
 import planet2FBX from "../assets/planets/p2.fbx"
 import planet3FBX from "../assets/planets/p3.fbx"
+import planet4FBX from "../assets/planets/p4.fbx"
+import planet5FBX from "../assets/planets/p5.fbx"
+import planet6FBX from "../assets/planets/p6.fbx"
+
 
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 console.log(sputnikFBX);
@@ -29,8 +34,12 @@ export class PlanetMeshCreator extends BaseMeshCreator {
     }
 
     PLANETS = [
+        {url: planet1FBX, obj:null},
         {url: planet2FBX, obj:null},
-        {url: planet3FBX, obj:null}
+        {url: planet3FBX, obj:null},
+        {url: planet4FBX, obj:null},
+        {url: planet5FBX, obj:null},
+        {url: planet6FBX, obj:null},
     ]
 
     load(){
@@ -57,7 +66,7 @@ export class PlanetMeshCreator extends BaseMeshCreator {
                     return new Promise((resolve, _reject) => {
                         loader.load(prefab.url, (fbx) => {
                             prefab.obj = fbx
-                            prefab.obj.scale.set(0.001, 0.001, 0.001);
+                            prefab.obj.scale.set(0.002, 0.002, 0.002);
                             prefab.obj.castShadow = true;
                             prefab.obj.receiveShadow = true;
                             console.log("loaded planet ", prefab.url, prefab.obj);
