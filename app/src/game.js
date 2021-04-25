@@ -126,7 +126,7 @@ export function game_init(options){
     sun.addComponent(PlanetaryComponent,{mass:planet_mass(SR),radius:SR/2})
     sun.name = "sun"
 
-    const n = 10 // num planets
+    const n = 12 // num planets
     for(var i=0; i<n; i++){
         const p = world.createEntity()
         const r = 5 + i * 1.5 
@@ -149,7 +149,7 @@ export function game_init(options){
             land_vel:5,
             rotSpeed: (Math.random() - 0.5) / 10, // degrees per tick?
             axis: Math.random() * 2 * Math.PI, // 0-360 degrees of axis rotation
-            satRotSpeed: (Math.random() - 0.5) / 100
+            satRotSpeed: (Math.random() - 0.5) / 20
         })
         p.name = "Planet "+ (i+1)
 

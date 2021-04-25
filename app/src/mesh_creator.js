@@ -73,7 +73,7 @@ export class PlanetMeshCreator extends BaseMeshCreator {
                     return new Promise((resolve, _reject) => {
                         loader.load(prefab.url, (fbx) => {
                             prefab.obj = fbx
-                            prefab.obj.scale.set(0.003, 0.003, 0.003);
+                            prefab.obj.scale.set(0.0025, 0.0025, 0.0025);
                             prefab.obj.castShadow = true;
                             prefab.obj.receiveShadow = true;
                             console.log("loaded planet ", prefab.url, prefab.obj);
