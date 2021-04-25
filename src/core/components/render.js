@@ -32,6 +32,7 @@ CameraComponent.schema = {
   current: { type: Types.Boolean, default: false },
   lookAt: { type: Vector3Type, default: new Vector3(0,0,0) },
   upVec: { type: Vector3Type, default: new Vector3(0,1,0) },
+  fov: { type: Types.Number, default: 50 },
 }
 
 export class LightComponent extends Component {}
