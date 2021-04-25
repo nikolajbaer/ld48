@@ -1,5 +1,5 @@
 import { System, Not } from "ecsy";
-import { Physics2dComponent, Body2dComponent, Collision2dComponent } from "../components/physics2d.js"
+import { Physics2dComponent, Body2dComponent, Collision2dComponent, Joint2dComponent, PhysicsJoint2dComponent } from "../components/physics2d.js"
 import { LocRotComponent } from "../components/position.js"
 import { Obj3dComponent } from "../components/render.js"
 import * as pl from "planck-js"
@@ -26,6 +26,7 @@ export class Physics2dSystem extends System {
     }
 
     begin_contact(contact){
+
     }
 
     end_contact(contact){
@@ -91,19 +92,52 @@ export class Physics2dSystem extends System {
         e.addComponent(Physics2dComponent, { body: body1 })
     }
 
+    create_physics_joint(e){
+        const joint = e.getComponent(Joint2dComponent)
+        if(!joint.entity.alive || !joint.entity.hasComponent(Physics2dComponent)){
+            console.error("Attempt to create physics2d joint to non-physics entity or dead entity")
+            e.removeComponent(Joint2dComponent) 
+        }
+        const body = e.getComponent(Physics2dComponent).body
+        const body1 = joint.entity.getComponent(Physics2dComponent).body
+
+        switch(joint.joint_type){
+            case "weld":
+                console.log("welding ",body,body1)
+                const j = this.physics_world.createJoint(pl.WeldJoint(joint.joint_config,body,body1,joint.anchor_a))
+                console.log("New Joint:",j)
+                e.addComponent(PhysicsJoint2dComponent,{joint:j})
+                break;
+            default:
+                console.error("Unknown/Unsupported joint type:",joint.joint_type)
+                e.removeComponent(Joint2dComponent)
+                break;
+        }
+    }
+
     execute(delta,time){
         if(!this.physics_world) return
 
         // first intialize any uninitialized bodies
-        this.queries.uninitialized.results.forEach( e => {
+        this.queries.uninitialized_bodies.results.forEach( e => {
             this.create_physics_body(e)
         })
 
         // todo then remove any removed bodies
-        this.queries.remove.results.forEach( e => {
+        this.queries.remove_bodies.results.forEach( e => {
             const body = e.getComponent(Physics2dComponent).body
             this.physics_world.destroyBody(body)
             e.removeComponent(Physics2dComponent)
+        })
+
+        this.queries.uninitialized_joints.results.forEach( e => {
+            this.create_physics_joint(e)
+        })
+
+        this.queries.remove_joints.results.forEach( e => {
+            const joint = e.getComponent(PhysicsJoint2dComponent).joint
+            this.physics_world.destroyJoint(joint)
+            e.removeComponent(PhysicsJoint2dComponent)
         })
 
         this.physics_world.step(1/60,5,2)
@@ -112,16 +146,20 @@ export class Physics2dSystem extends System {
  }
 
 Physics2dSystem.queries = {
-    uninitialized: { components: [LocRotComponent, Body2dComponent, Not(Physics2dComponent)]},
+    uninitialized_bodies: { components: [LocRotComponent, Body2dComponent, Not(Physics2dComponent)]},
     entities: { 
         components: [Physics2dComponent] ,
         listen: {
             removed: true
         }
     },
-    remove: {
+    remove_bodies: {
         components: [Physics2dComponent,Not(Body2dComponent)]
     },
+    uninitialized_joints: { components: [Joint2dComponent, Not(PhysicsJoint2dComponent)]},
+    remove_joints: { 
+        components: [PhysicsJoint2dComponent,Not(Joint2dComponent)]
+    }
 };
 
 

@@ -28,3 +28,16 @@ Collision2dComponent.schema = {
   tan_impulse: { type: Types.Number },
 }
 
+export class Joint2dComponent extends Component {}
+Joint2dComponent.schema = {
+  entity: { type: Types.Ref },
+  joint_type: { type: Types.String, default: "weld" },
+  joint_config: { type: Types.JSON },
+  anchor_a: { type: Vector2Type },
+  anchor_b: { type: Vector2Type, default: null },
+}
+
+export class PhysicsJoint2dComponent extends SystemStateComponent {}
+PhysicsJoint2dComponent.schema = {
+  joint: { type: Types.Ref },
+}

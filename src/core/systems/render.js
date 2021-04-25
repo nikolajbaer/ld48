@@ -75,7 +75,7 @@ export class RenderSystem extends System {
     create_camera(e){
         console.log("creating camera")
         const cam = e.getComponent(CameraComponent)
-        const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 1000 );
+        const camera = new THREE.PerspectiveCamera( cam.fov, window.innerWidth / window.innerHeight, 0.1, 1000 );
         const location = e.getComponent(LocRotComponent).location
         camera.position.set(location.x,location.y,location.z)
         camera.up = new THREE.Vector3(cam.upVec.x,cam.upVec.y,cam.upVec.z)

@@ -10,7 +10,7 @@ export class ThrustersSystem extends System {
         this.queries.movers.results.forEach( e => {
             const actions =  e.getComponent(ActionListenerComponent).actions
             const body = e.getComponent(Physics2dComponent).body
-            const thruster = e.getComponent(ThrusterComponent)
+            const thruster = e.getMutableComponent(ThrusterComponent)
             const obj3d = e.getComponent(Obj3dComponent).obj
 
             const v = new planck.Vec2()
@@ -48,6 +48,8 @@ export class ThrustersSystem extends System {
                 obj3d.children[3].visible = false
             }
             v.normalize()
+
+            thruster.on = v.length() > 0
 
             v.mul(thruster.thrust * boost)
 
