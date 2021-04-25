@@ -3,7 +3,8 @@ import ReactDOM, { render } from "react-dom";
 import { GameComponent } from "../../src/core/ui_components/GameComponent"
 import { HUDView } from "../../src/core/ui_components/HUDView";
 import { game_init } from "./game.js"
-import { PlanetMeshCreator } from "./mesh_creator";
+import { PlanetMeshCreator } from "./mesh_creator"
+import { SoundLoader } from "./sound_loader"
 import "./style.css"
 
 export class PlanetGame extends React.Component {
@@ -24,7 +25,11 @@ export class PlanetGame extends React.Component {
         if(this.state.mesh_creator == null){
             const creator = new PlanetMeshCreator()
             creator.load().then( () => {
-                this.startGame()
+                const soundLoader = new SoundLoader()
+                soundLoader.load().then( () => {
+                    soundLoader.get('title').play();
+                    this.startGame()
+                })
             })
             this.setState({mesh_creator:creator})
         }else{

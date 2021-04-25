@@ -4,6 +4,7 @@ import * as planetVertexShader from "../shaders/planet.vert"
 import * as planetFragmentShader from "../shaders/planet.frag"
 import sputnikFBX from "../assets/sputnik.fbx"
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+console.log(sputnikFBX);
 
 export class PlanetMeshCreator extends BaseMeshCreator {
     BASE_GEOMETRIES = {
@@ -28,7 +29,7 @@ export class PlanetMeshCreator extends BaseMeshCreator {
 
     load(){
         // Todo don't make empty promises
-        const manager = new THREE.LoadingManager();
+        const manager = new THREE.LoadingManager()
         const loader = new FBXLoader(manager)
 
         return new Promise((resolve,reject) => {
