@@ -6,6 +6,7 @@ import { LocRotComponent } from "../../../src/core/components/position"
 import { Project2dComponent } from "../../../src/core/components/render"
 import { Vector3 } from "../../../src/core/ecs_types"
 import { ExplosionComponent } from "../components/explosion"
+import { FuelComponent } from "../components/fuel"
 import { PlanetaryComponent } from "../components/gravity"
 import { PlanetLandingComponent } from "../components/planet"
 import { ThrusterComponent } from "../components/thrusters"
@@ -62,7 +63,12 @@ export class PlanetCollisionSystem extends System {
                 e.removeComponent(Joint2dComponent)
                 e.removeComponent(Project2dComponent)
                 console.log("Taking Off!")
+            }else{
+                const fuel = e.getMutableComponent(FuelComponent)
+                fuel.amount += 0.5;
+                if(fuel.amount > 100){ fuel.amount = 100 }
             }
+
         })
     }
 }
