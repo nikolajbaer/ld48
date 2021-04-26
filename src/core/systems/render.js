@@ -84,17 +84,16 @@ export class RenderSystem extends System {
             camera.lookAt(cam.lookAt.x,cam.lookAt.y,cam.lookAt.z)
         }
         this.scene.add(camera)
-        e.addComponent(Obj3dComponent,{ obj: camera })
+        e.addComponent(Obj3dComponent, { obj: camera })
     }
 
-    create_mesh(e){
+    create_mesh(e) {
         const loc = e.getComponent(LocRotComponent)
         const model = e.getComponent(ModelComponent)
         
         const mesh = this.mesh_creator.create_mesh(model.geometry,model.material,model.cast_shadow,model.receive_shadow)
         mesh.scale.set( model.scale.x,model.scale.y,model.scale.z)
         mesh.position.set(loc.location.x,loc.location.y,loc.location.z)
-        //mesh.rotation.set(loc.rotation.x,loc.rotation.y,loc.rotation.z)
         this.scene.add( mesh )
         e.addComponent( Obj3dComponent, { obj: mesh })
     }
@@ -122,7 +121,7 @@ export class RenderSystem extends System {
             e.removeComponent(Obj3dComponent)
         })
 
-        if(this.queries.camera.results.length > 0){
+        if(this.queries.camera.results.length > 0) {
             const e = this.queries.camera.results[0]
             const camera = e.getComponent(Obj3dComponent).obj
 

@@ -1,6 +1,6 @@
 import * as THREE from "three"
 import { BaseMeshCreator } from "../../src/core/systems/render"
-import sputnikFBX from "../assets/sputnik.fbx"
+import sputnikFBX from "../assets/ufo.fbx"
 import planet1FBX from "../assets/planets/p1.fbx"
 import planet2FBX from "../assets/planets/p2.fbx"
 import planet3FBX from "../assets/planets/p3.fbx"

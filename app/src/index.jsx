@@ -12,6 +12,7 @@ export class PlanetGame extends React.Component {
     constructor(props){
         super(props)
         this.state = { 
+            game_over_dismissed: false,
             playing: false,
             loading: false,
             mesh_creator: null,
@@ -28,7 +29,7 @@ export class PlanetGame extends React.Component {
             creator.load().then( () => {
                 const soundLoader = new SoundLoader()
                 soundLoader.load().then( () => {
-                    soundLoader.get('title').play();
+                    soundLoader.get('title').play()
                     this.startGame()
                 })
             })
@@ -39,7 +40,7 @@ export class PlanetGame extends React.Component {
     } 
 
     startGame(){
-        this.setState({playing:true,loading:false})
+        this.setState({playing:true,loading:false,game_over_dismissed:false})
     }
 
     exitToMenu(){
@@ -47,13 +48,16 @@ export class PlanetGame extends React.Component {
     }
 
     gameOverMenu(distance){
-        return (
-            <div className="menu">
-                <h1>Game Over</h1>
-                <p>You traveled {format_int(distance)} million kilometers!</p>
-                <button onClick={()=>this.exitToMenu()}>PLAY AGAIN</button>
-            </div>
-        )
+        if (!this.state.game_over_dismissed){
+            return (
+                <div className="menu">
+                    <h1>Game Over</h1>
+                    <p>You traveled {format_int(distance)} million kilometers!</p>
+                    <button onClick={()=>this.exitToMenu()}>PLAY AGAIN</button>
+                    <button onClick={()=>this.setState({game_over_dismissed:true})}>OKAY...</button>
+                </div>
+            )
+        }
     }
 
     showTutorial(){
@@ -101,7 +105,7 @@ export class PlanetGame extends React.Component {
         }else{
             return (
                 <div className="menu">
-                    <h1>TBD GAME TITLE</h1>
+                    <h1>OUMUAMUA</h1>
                     <h4>deeper and deeper..</h4>
                     <button onClick={() => this.handleNewGame()}>NEW GAME</button>
                     <button onClick={() => this.showTutorial()}>TUTORIAL</button>
