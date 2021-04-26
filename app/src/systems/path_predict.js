@@ -119,7 +119,6 @@ export class PathPredictorSystem extends System {
                 const highlight = obj.children[1]
                 if(highlight){ highlight.visible = false }
                 if(p == targeted){
-                    console.log(obj.children)
                     if(p.hasComponent(TargetedComponent)){
                         p.getMutableComponent(TargetedComponent).impact_vel = impact_vel
                     }else{

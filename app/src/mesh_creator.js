@@ -186,7 +186,7 @@ export class PlanetMeshCreator extends BaseMeshCreator {
 
     }
 
-    add_highlight(obj){
+    add_highlight(obj,scale=0.75){
         const highlight = new THREE.Object3D()
         // top
         const UP = new THREE.Vector3(0,0,1)
@@ -212,14 +212,14 @@ export class PlanetMeshCreator extends BaseMeshCreator {
         highlight.children[7].rotateOnAxis(AHEAD,Math.PI)
         highlight.children[7].rotateOnAxis(UP,Math.PI*1.5)
 
-        highlight.scale.set(0.5,0.5,0.5)
+        highlight.scale.set(scale,scale,scale)
         highlight.visible = false
         obj.add(highlight)
     }
 
     create_sun(){
         const sun = new THREE.Mesh(this.BASE_GEOMETRIES["sphere"],this.BASE_MATERIALS["sun"])
-        this.add_highlight(mesh)
+        this.add_highlight(sun,5)
         return sun
     }
 }
