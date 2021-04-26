@@ -20,6 +20,7 @@ export class GameComponent extends React.Component {
         }
         const options = {
             render_element: "render",
+            overlay_element: "overlay2d",
             game_over: () => this.handleGameOver(),
             game_paused: () => this.handleGamePaused()
         }
@@ -61,6 +62,7 @@ export class GameComponent extends React.Component {
         return (
         <div id="game">
             <canvas id="render"></canvas>
+            <canvas id="overlay2d"></canvas>
             {this.props.children(this.state.hudState)}
         </div>
         )

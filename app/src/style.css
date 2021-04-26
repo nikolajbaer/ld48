@@ -30,7 +30,7 @@ body {
     border-radius: 4px;
     top: 50%;
     left: 50%;
-    width: 300px;
+    min-width: 300px;
     border: solid 1px white;
     text-align: center;
     color: white;
@@ -41,14 +41,31 @@ body {
     padding: 16px;
 }
 
+.menu p {
+    margin: 8px;
+    max-width: 300px;
+    margin: auto;
+}
+.menu img {
+    margin: 8px;
+}
+
 .menu button {
     background-color: black;
     border: 1px solid white;
     border-radius: 4px;
-    padding: 4px;
+    margin: 4px;
     cursor: pointer;
     color: white;
 }
 .menu button:hover {
     background-color: #333;
+}
+
+#overlay2d {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+    left: 0px;
 }

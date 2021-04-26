@@ -1,5 +1,5 @@
 import { World } from "ecsy"
-import { CameraComponent, Obj3dComponent, ModelComponent, LightComponent } from "../../src/core/components/render"
+import { CameraComponent, Obj3dComponent, ModelComponent, LightComponent, Project2dComponent } from "../../src/core/components/render"
 import { LocRotComponent } from "../../src/core/components/position"
 import { Body2dComponent, Collision2dComponent, Joint2dComponent, Physics2dComponent, PhysicsJoint2dComponent  } from "../../src/core/components/physics2d"
 import { HUDDataComponent } from "../../src/core/components/hud"
@@ -29,6 +29,8 @@ import { DistanceTraveledComponent } from "./components/distance"
 import { DistanceSystem } from "./systems/distance"
 import { PlanetHUDUpdateSystem } from "./systems/hud"
 import { PlanetLandingComponent } from "./components/planet"
+import { Overlay2dComponent } from "../../src/core/components/overlay2d"
+import { Overlay2dSystem } from "../../src/core/systems/overlay2d"
 
 class HitComponent extends TagComponent {}
 
@@ -65,6 +67,8 @@ export function game_init(options){
     world.registerComponent(Joint2dComponent)
     world.registerComponent(PhysicsJoint2dComponent)
     world.registerComponent(PlanetLandingComponent)
+    world.registerComponent(Overlay2dComponent)
+    world.registerComponent(Project2dComponent)
     world.registerComponent(FuelComponent)
 
 
@@ -87,6 +91,7 @@ export function game_init(options){
     world.registerSystem(Physics2dMeshUpdateSystem)
     world.registerSystem(PlanetHUDUpdateSystem)
     world.registerSystem(PlanetarySystem)
+    world.registerSystem(Overlay2dSystem,{render_element_id:options.overlay_element})
     world.registerSystem(RenderSystem,{
         render_element_id:options.render_element,
         mesh_creator: options.mesh_creator,
@@ -198,7 +203,7 @@ function start_game(world){
     let paused = false
 
     window.addEventListener("keypress", (e) => {
-        if(e.code == " "){
+        if(e.code == "Space"){
             paused = !paused
         }
     })
