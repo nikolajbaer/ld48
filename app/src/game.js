@@ -22,6 +22,7 @@ import { PredictorComponent, TargetedComponent } from "./components/path_predict
 import { PathPredictorSystem } from "./systems/path_predict"
 import { PlanetCollisionSystem } from "./systems/planet_collision"
 import { ExplosionComponent } from "./components/explosion"
+import { FuelComponent } from "./components/fuel"
 import { ExplosionSystem } from "./systems/explosion"
 import { GameHudState } from "./hud_state"
 import { DistanceTraveledComponent } from "./components/distance"
@@ -68,6 +69,8 @@ export function game_init(options){
     world.registerComponent(PlanetLandingComponent)
     world.registerComponent(Overlay2dComponent)
     world.registerComponent(Project2dComponent)
+    world.registerComponent(FuelComponent)
+
 
     // register our systems
     if(options.touch){
@@ -186,6 +189,7 @@ export function game_init(options){
     b.addComponent(PredictorComponent,{ticks:500,delta:1/30})
     b.addComponent(HUDDataComponent,{data:{distance:0,fuel:100,game_over:false,velocity:0}})
     b.addComponent(DistanceTraveledComponent)
+    b.addComponent(FuelComponent)
     b.name = "sputnik"
 
     start_game(world)

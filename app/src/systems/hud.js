@@ -5,9 +5,17 @@ import { DistanceTraveledComponent } from "../components/distance"
 import { PlanetaryComponent } from "../components/gravity"
 import { TargetedComponent } from "../components/path_predict"
 import { PlanetLandingComponent } from "../components/planet"
+import { FuelComponent } from "../components/fuel"
+
 
 export class PlanetHUDUpdateSystem extends System {
     execute(delta,time){
+        this.queries.fuel.results.forEach( e => {
+            const data = e.getMutableComponent(HUDDataComponent).data
+            const fuel = e.getComponent(FuelComponent)
+            data.fuel = fuel.amount
+        })
+
         this.queries.hud.results.forEach( e => {
             const data = e.getMutableComponent(HUDDataComponent).data
             const dist = e.getComponent(DistanceTraveledComponent)
@@ -32,9 +40,6 @@ export class PlanetHUDUpdateSystem extends System {
             }else{
                 data.landed_planet = null
             }
-
-            // TODO add fuel?
-
         })
     }
 }
@@ -46,4 +51,7 @@ PlanetHUDUpdateSystem.queries = {
     targeted: {
         components: [TargetedComponent,PlanetaryComponent]
     },
+    fuel: {
+        components: [FuelComponent]
+    }
 }
