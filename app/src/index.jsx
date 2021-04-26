@@ -106,7 +106,7 @@ export class PlanetGame extends React.Component {
             return (
                 <div className="menu">
                     <h1>OUMUAMUA</h1>
-                    <h4>deeper and deeper..</h4>
+                    <h4>deeper and deeper.. down the well</h4>
                     <button onClick={() => this.handleNewGame()}>NEW GAME</button>
                     <button onClick={() => this.showTutorial()}>TUTORIAL</button>
                 </div>

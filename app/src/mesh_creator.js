@@ -10,8 +10,6 @@ import planet6FBX from "../assets/planets/p6.fbx"
 import planet7FBX from "../assets/planets/p7.fbx"
 import planet8FBX from "../assets/planets/p8.fbx"
 import planet9FBX from "../assets/planets/p9.fbx"
-
-
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 
 export class PlanetMeshCreator extends BaseMeshCreator {
@@ -21,6 +19,11 @@ export class PlanetMeshCreator extends BaseMeshCreator {
         "plane": new THREE.PlaneGeometry(0,1,5,5),
         "ground": new THREE.PlaneGeometry(1000,1000, 50, 50),
         "orbit": new THREE.RingGeometry(1,1.005,64),
+        "planet_highlight_": new THREE.BoxGeometry(),
+        "planet_highlight": new THREE.BufferGeometry().setFromPoints(
+            [  new THREE.Vector3(-1,-1,-1), new THREE.Vector3(-.75,-1,-1),
+               new THREE.Vector3(-1,-1,-1),  new THREE.Vector3(-1,-.75,-1),
+               new THREE.Vector3(-1,-1,-1),  new THREE.Vector3(-1,-1,-.75) ] )
     }
 
     BASE_MATERIALS = {
@@ -29,6 +32,7 @@ export class PlanetMeshCreator extends BaseMeshCreator {
         "trail": new THREE.MeshBasicMaterial( { color: 0xffffff, opacity: 0.1, transparent: true }),
         "sun": new THREE.MeshBasicMaterial({ color: 0xFFFF00 }),
         "explosion": new THREE.MeshBasicMaterial({ color: 0xFFAA00 }),
+        "planet_highlight": new THREE.LineBasicMaterial({color: 0xFFFFFF}),
     }
 
     PREFABS = {
@@ -91,6 +95,8 @@ export class PlanetMeshCreator extends BaseMeshCreator {
                 return this.create_stars()
             case "planet":
                 return this.create_planet()
+            case "sun":
+                return this.create_sun()
             default:
                 const m =new THREE.Mesh(
                     this.BASE_GEOMETRIES[geometry],
@@ -173,7 +179,47 @@ export class PlanetMeshCreator extends BaseMeshCreator {
         const planet = PLANETS[planet_idx].obj.clone();
         window.planet_ins ||= [];
         obj.add(planet);
+
+        this.add_highlight(obj)
         window.planet_ins.push(obj);
         return obj;
+
+    }
+
+    add_highlight(obj){
+        const highlight = new THREE.Object3D()
+        // top
+        const UP = new THREE.Vector3(0,0,1)
+        const AHEAD = new THREE.Vector3(0,1,0)
+        highlight.add(new THREE.LineSegments(this.BASE_GEOMETRIES["planet_highlight"],this.BASE_MATERIALS["planet_highlight"]))
+        highlight.add(new THREE.LineSegments(this.BASE_GEOMETRIES["planet_highlight"],this.BASE_MATERIALS["planet_highlight"]))
+        highlight.children[1].rotateOnAxis(UP,Math.PI/2)
+        highlight.add(new THREE.LineSegments(this.BASE_GEOMETRIES["planet_highlight"],this.BASE_MATERIALS["planet_highlight"]))
+        highlight.children[2].rotateOnAxis(UP,Math.PI)
+        highlight.add(new THREE.LineSegments(this.BASE_GEOMETRIES["planet_highlight"],this.BASE_MATERIALS["planet_highlight"]))
+        highlight.children[3].rotateOnAxis(UP,Math.PI*1.5)
+
+        // bottom
+        highlight.add(new THREE.LineSegments(this.BASE_GEOMETRIES["planet_highlight"],this.BASE_MATERIALS["planet_highlight"]))
+        highlight.children[4].rotateOnAxis(AHEAD,Math.PI)
+        highlight.add(new THREE.LineSegments(this.BASE_GEOMETRIES["planet_highlight"],this.BASE_MATERIALS["planet_highlight"]))
+        highlight.children[5].rotateOnAxis(AHEAD,Math.PI)
+        highlight.children[5].rotateOnAxis(UP,Math.PI/2)
+        highlight.add(new THREE.LineSegments(this.BASE_GEOMETRIES["planet_highlight"],this.BASE_MATERIALS["planet_highlight"]))
+        highlight.children[6].rotateOnAxis(AHEAD,Math.PI)
+        highlight.children[6].rotateOnAxis(UP,Math.PI)
+        highlight.add(new THREE.LineSegments(this.BASE_GEOMETRIES["planet_highlight"],this.BASE_MATERIALS["planet_highlight"]))
+        highlight.children[7].rotateOnAxis(AHEAD,Math.PI)
+        highlight.children[7].rotateOnAxis(UP,Math.PI*1.5)
+
+        highlight.scale.set(0.5,0.5,0.5)
+        highlight.visible = false
+        obj.add(highlight)
+    }
+
+    create_sun(){
+        const sun = new THREE.Mesh(this.BASE_GEOMETRIES["sphere"],this.BASE_MATERIALS["sun"])
+        this.add_highlight(mesh)
+        return sun
     }
 }

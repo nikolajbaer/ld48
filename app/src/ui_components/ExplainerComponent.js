@@ -14,22 +14,22 @@ export class ExplainerComponent extends React.Component {
         this.slides = [
             {
                 img:explainer1,
-                txt:"Fly your spaceship around the system using W/A/S/D or Arrow keys to operate the thrusters. Your current trajectory with the graviation of the planets is shown as a path ahead of your ship."
+                txt:"Fly your spaceship around the system using W/A/S/D or Arrow keys to operate the thrusters and SHIFT to use extra thrust. Your current trajectory with the graviation of the planets is shown as a path ahead of your ship."
             },
             {
                 img: explainer2,
                 txt:"Blue path means there are no collisions anticipated ahead. Green path indicates you most likely will have a soft landing on a planet to refuel! Remember thrusters help you slow down!"
             },
             {
+                img: explainer5,
+                txt:'Red path means you most likely will leave a smoldering crater, or possibly incinerate in the star at the center. Use thrust to avoid that fate, and maybe try speeding up to escape that gravity!'
+            },
+            {
                 img: explainer3,
-                txt:'Red path means you most likely will leave a smoldering crater, or possibly incinerate in the star at the center.'
+                txt:'Land on planets to refuel. Use SHIFT to use your boost thrusters to get off a planet.'
             },
             {
                 img: explainer4,
-                txt:'Land on planets to refuel. Use SPACE to use your boost thrusters to get off a planet, and SHIFT to make fine adjustments to your thrust.'
-            },
-            {
-                img: explainer5,
                 txt:'Have fun, use the orbital paths to glide into planets as you go deeper and deeper down the well!'
             }
         ]
