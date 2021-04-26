@@ -44,7 +44,6 @@ export class PlanetCollisionSystem extends System {
                         joint_config: { collideConnected: false },
                         anchor_a: pos,
                     })
-                    console.log("Landed on ",c.entity.name)
                     e.addComponent(PlanetLandingComponent,{entity:c.entity})
                     if(!c.entity.hasComponent(Project2dComponent)){
                         c.entity.addComponent(Project2dComponent)
@@ -52,7 +51,6 @@ export class PlanetCollisionSystem extends System {
                 }
                 e.removeComponent(Collision2dComponent)
             }else{
-                console.log("collided with ",c.entity)
                 e.removeComponent(Collision2dComponent)
             }
         })
@@ -62,7 +60,6 @@ export class PlanetCollisionSystem extends System {
                 e.removeComponent(PlanetLandingComponent)
                 e.removeComponent(Joint2dComponent)
                 e.removeComponent(Project2dComponent)
-                console.log("Taking Off!")
             }else{
                 const fuel = e.getMutableComponent(FuelComponent)
                 fuel.amount += 0.5;

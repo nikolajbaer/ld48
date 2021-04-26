@@ -42,7 +42,6 @@ export function load_assets(){
 }
 
 export function game_init(options){
-    console.log("initializing game")
     const world = new World()
 
     // register components we are using

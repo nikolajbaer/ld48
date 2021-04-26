@@ -1,14 +1,11 @@
 import {Howler, Howl} from 'howler';
 import titleMusic from "../assets/sounds/oumuamua.mp3"
 
-
-console.log(titleMusic);
-
 export class SoundLoader {
     MUSIC = {
         "title": {src: titleMusic, obj: null}
     }
-    
+
     get(which) {
         return this.MUSIC[which].obj;
     }
@@ -21,7 +18,6 @@ export class SoundLoader {
                 src: this.MUSIC['title'].src
             });
             this.MUSIC['title'].obj.once('load', function() {
-                console.log('loaded, resolving!');
                 resolve();
             })
         }) 

@@ -13,7 +13,6 @@ import planet9FBX from "../assets/planets/p9.fbx"
 
 
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
-console.log(sputnikFBX);
 
 export class PlanetMeshCreator extends BaseMeshCreator {
     BASE_GEOMETRIES = {
@@ -58,13 +57,11 @@ export class PlanetMeshCreator extends BaseMeshCreator {
         const loader = new FBXLoader(manager)
 
         return new Promise((all_resolve,all_reject) => {
-            console.log("loading prefabs ")
             return Promise.all(
                 Object.values(this.PREFABS).map( prefab => {
                     return new Promise((resolve,reject) => {
                         loader.load(prefab.url, (fbx) =>{
                             prefab.obj = fbx
-                            console.log("loaded ",prefab.url,prefab.obj)
                             resolve()
                         })
                     })
@@ -76,13 +73,11 @@ export class PlanetMeshCreator extends BaseMeshCreator {
                             prefab.obj.scale.set(0.0025, 0.0025, 0.0025);
                             prefab.obj.castShadow = true;
                             prefab.obj.receiveShadow = true;
-                            console.log("loaded planet ", prefab.url, prefab.obj);
                             resolve();
                         })
                     })
                 })
             ).then(() => {
-                console.log("prefabs loaded")
                 all_resolve()
             })
         })

@@ -16,7 +16,7 @@ export class RenderSystem extends System {
         }
 
         // todo make this size from the element
-        console.log("setting size to ",window.innerWidth,window.innerHeight)
+        //console.log("setting size to ",window.innerWidth,window.innerHeight)
         window.addEventListener('resize', e => {
             this.update_renderer_size(renderer,window.innerWidth,window.innerHeight)
         })
@@ -56,7 +56,6 @@ export class RenderSystem extends System {
                 const ambient = new THREE.AmbientLight( light.color );
                 this.scene.add( ambient );
                 e.addComponent(Obj3dComponent,{obj:ambient})
-                console.log("Creating ambient light")
                 break
             case "point":
                 const point = new THREE.PointLight( light.color, light.intensity, light.decay );
@@ -65,7 +64,6 @@ export class RenderSystem extends System {
                     point.position.set( location.x,location.y, location.z );
                 }
                 point.castShadow = light.cast_shadow
-                console.log("Creating point light",light.cast_shadow)
                 this.scene.add(point)
                 e.addComponent(Obj3dComponent,{obj:point})
                 break
@@ -73,14 +71,13 @@ export class RenderSystem extends System {
     }
 
     create_camera(e){
-        console.log("creating camera")
         const cam = e.getComponent(CameraComponent)
         const camera = new THREE.PerspectiveCamera( cam.fov, window.innerWidth / window.innerHeight, 0.1, 1000 );
         const location = e.getComponent(LocRotComponent).location
         camera.position.set(location.x,location.y,location.z)
         camera.up = new THREE.Vector3(cam.upVec.x,cam.upVec.y,cam.upVec.z)
         if( cam.lookAt ){
-            console.log("looking at ",cam.lookAt)
+            //console.log("looking at ",cam.lookAt)
             camera.lookAt(cam.lookAt.x,cam.lookAt.y,cam.lookAt.z)
         }
         this.scene.add(camera)
