@@ -1,6 +1,6 @@
 import { System, Not } from "ecsy";
 import { LocRotComponent } from "../components/position"
-import { Obj3dComponent, ModelComponent, CameraComponent, LightComponent } from "../components/render"
+import { Obj3dComponent, ModelComponent, CameraComponent, LightComponent, Project2dComponent } from "../components/render"
 import * as THREE from "three"
         
 export class RenderSystem extends System {
@@ -125,6 +125,16 @@ export class RenderSystem extends System {
         if(this.queries.camera.results.length > 0){
             const e = this.queries.camera.results[0]
             const camera = e.getComponent(Obj3dComponent).obj
+
+            this.queries.projectors.results.forEach( e => {
+                const proj = e.getMutableComponent(Project2dComponent)
+                const obj3d = e.getComponent(Obj3dComponent).obj
+                const cpos = obj3d.position.clone()
+                cpos.project(camera)
+                proj.x = cpos.x
+                proj.y = cpos.y
+            })
+
             this.renderer.render( this.scene, camera )
         }
     }
@@ -142,6 +152,9 @@ RenderSystem.queries = {
     },
     camera: {
         components: [ CameraComponent, Obj3dComponent ]
+    },
+    projectors: {
+        components: [ Project2dComponent ]
     },
     remove: {
         components: [Not(ModelComponent),Obj3dComponent,Not(CameraComponent),Not(LightComponent)]

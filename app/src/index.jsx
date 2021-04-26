@@ -5,6 +5,7 @@ import { HUDView } from "../../src/core/ui_components/HUDView";
 import { game_init } from "./game.js"
 import { PlanetMeshCreator } from "./mesh_creator"
 import { SoundLoader } from "./sound_loader"
+import { ExplainerComponent } from "./ui_components/ExplainerComponent"
 import "./style.css"
 
 export class PlanetGame extends React.Component {
@@ -50,10 +51,17 @@ export class PlanetGame extends React.Component {
             <div className="menu">
                 <h1>Game Over</h1>
                 <p>You traveled {format_int(distance)} million kilometers!</p>
-
                 <button onClick={()=>this.exitToMenu()}>PLAY AGAIN</button>
             </div>
         )
+    }
+
+    showTutorial(){
+        this.setState({tutorial:true})
+    }
+
+    closeTutorial(){
+        this.setState({tutorial:false})
     }
 
     render(){
@@ -83,12 +91,19 @@ export class PlanetGame extends React.Component {
                     <p>LOADING ASSETS..</p>
                 </div>
             )
+        }else if(this.state.tutorial){
+            return (
+                <div className="menu">
+                    <ExplainerComponent closeHandler={() => this.closeTutorial()} />
+                </div>
+            )
         }else{
             return (
                 <div className="menu">
                     <h1>TBD GAME TITLE</h1>
                     <h4>deeper and deeper..</h4>
                     <button onClick={() => this.handleNewGame()}>NEW GAME</button>
+                    <button onClick={() => this.showTutorial()}>TUTORIAL</button>
                 </div>
             )
         }

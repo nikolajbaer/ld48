@@ -43,3 +43,9 @@ LightComponent.schema = {
     color: { type: Types.Number, default: 0xffffff },
     decay: { type: Types.Number, default: 100 },
 }
+
+export class Project2dComponent extends Component {}
+Project2dComponent.schema = {
+  x: { type: Types.Number },
+  y: { type: Types.Number },
+}
