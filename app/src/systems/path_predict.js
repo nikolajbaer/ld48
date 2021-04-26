@@ -10,6 +10,23 @@ import * as THREE from "three"
 
 export class PathPredictorSystem extends System {
 
+    set_landing_color(mesh,landing){
+        switch(landing){
+            case null:
+                mesh.material.color.setHex(0x00aaff)
+                break
+            case 2:
+                mesh.material.color.setHex(0x00ff00)
+                break;
+            case 1:
+                mesh.material.color.setHex(0xffff00)
+                break;
+            case 0:
+                mesh.material.color.setHex(0xff0000)
+                break;
+        }
+    }
+
     planet_positions(){
         return this.queries.planets.results.map( p => { 
             const pc = p.getComponent(PlanetaryComponent)
@@ -110,6 +127,7 @@ export class PathPredictorSystem extends System {
                     }
                     if(highlight){
                         highlight.visible = true // show highlight
+                        this.set_landing_color(highlight.children[0],landing)
                     }
                 }else if(p.hasComponent(TargetedComponent)){
                     p.removeComponent(TargetedComponent)
@@ -119,20 +137,7 @@ export class PathPredictorSystem extends System {
             // Now what with predictions?
             //console.log(predictions)
             predictor_mesh.geometry.setFromPoints(predictions)
-            switch(landing){
-                case null:
-                    predictor_mesh.material.color.setHex(0x00aaff)
-                    break
-                case 2:
-                    predictor_mesh.material.color.setHex(0x00ff00)
-                    break;
-                case 1:
-                    predictor_mesh.material.color.setHex(0xffff00)
-                    break;
-                case 0:
-                    predictor_mesh.material.color.setHex(0xff0000)
-                    break;
-            }
+            this.set_landing_color(predictor_mesh,landing)
             predict.landing = landing
         })
     }
