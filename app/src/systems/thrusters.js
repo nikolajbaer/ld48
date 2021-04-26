@@ -14,7 +14,6 @@ export class ThrustersSystem extends System {
             const thruster = e.getMutableComponent(ThrusterComponent)
             const fuel = e.getMutableComponent(FuelComponent)
             const obj3d = e.getComponent(Obj3dComponent).obj
-            if (fuel.amount <= 0) return
             const v = new planck.Vec2()
             const boost = actions.shift?thruster.boost:1
 
@@ -26,12 +25,23 @@ export class ThrustersSystem extends System {
             obj3d.children[2].scale.set(bscale,bscale,bscale)
             obj3d.children[3].scale.set(bscale,bscale,bscale) 
             
+            if (fuel.amount <= 0) {
+                obj3d.children[0].visible = false
+                obj3d.children[1].visible = false
+                obj3d.children[2].visible = false
+                obj3d.children[3].visible = false
+                return;
+            }
+
+
             if(actions.up){ 
                 v.y += actions.up 
                 obj3d.children[0].visible = true
             }else{
                 obj3d.children[0].visible = false
             }
+
+  
             if(actions.down){ 
                 v.y -= actions.down 
                 obj3d.children[1].visible = true
@@ -55,7 +65,7 @@ export class ThrustersSystem extends System {
             thruster.on = v.length() > 0
 
             v.mul(thruster.thrust * boost)
-
+            
             if (thruster.on) {
                 fuel.amount -= fuel.costPerThrust
                 if (boost > 1) {
